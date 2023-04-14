@@ -12,6 +12,9 @@ Matrícula, nome e curso dos participantes.
 
 - Administrador: Tem acesso a todas as funcionalidades do sistema, além de poder gerenciar os voluntários que acessarão o sistema.
 - Voluntário: Poder gerenciar as doações, recebimento de itens, as pessoas em situação de rua e os doadores.
+- Visitante: Poderá ver informações sobre as ONGs cadastradas no sistema, além de poder fazer login no sistema e se cadastrar como administrador.
+- Pessoa em situação de rua: Poderá receber ajuda de voluntários cadastrados no sistema, mas não poderá acessar o sistema. As pessoas em situação de rua poderão cadastradas pelos voluntários ou administradores.
+- Doador: Poderá doar itens para as ONGs cadastradas no sistema, mas não poderá acessar o sistema. Os doadores poderão cadastrados pelos voluntários ou administradores.
 
 ## :spiral_calendar: Entidades ou tabelas do sistema
 
