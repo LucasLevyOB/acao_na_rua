@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "administradores",
+  "info": {
+    "singularName": "administrador",
+    "pluralName": "administradores",
+    "displayName": "administradores"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "adm_id": {
+      "type": "uid"
+    },
+    "adm_nome": {
+      "type": "string"
+    },
+    "adm_senha": {
+      "type": "string"
+    },
+    "adm_email": {
+      "type": "email",
+      "required": true,
+      "unique": true
+    }
+  }
+}

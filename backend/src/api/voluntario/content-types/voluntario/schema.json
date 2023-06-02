@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "voluntarios",
+  "info": {
+    "singularName": "voluntario",
+    "pluralName": "voluntarios",
+    "displayName": "voluntario"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "aju_cpfcnpj": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::ajudante.ajudante"
+    },
+    "vol_setor": {
+      "type": "string"
+    },
+    "vol_data_entrada": {
+      "type": "date",
+      "required": true
+    },
+    "vol_data_saida": {
+      "type": "date"
+    }
+  }
+}

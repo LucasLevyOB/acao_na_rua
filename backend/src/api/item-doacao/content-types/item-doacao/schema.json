@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "item_doacaos",
+  "info": {
+    "singularName": "item-doacao",
+    "pluralName": "item-doacaos",
+    "displayName": "item_doacao"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "itd_id": {
+      "type": "uid",
+      "required": false
+    },
+    "doa_id": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::doacao.doacao"
+    },
+    "itd_nome": {
+      "type": "string",
+      "required": true
+    },
+    "itd_qtde": {
+      "type": "integer",
+      "required": true
+    },
+    "itd_categoria": {
+      "type": "string",
+      "required": true
+    },
+    "itd_validade": {
+      "type": "date",
+      "required": true
+    }
+  }
+}

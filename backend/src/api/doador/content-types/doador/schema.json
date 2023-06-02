@@ -1,0 +1,20 @@
+{
+  "kind": "collectionType",
+  "collectionName": "doadors",
+  "info": {
+    "singularName": "doador",
+    "pluralName": "doadors",
+    "displayName": "doador"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "aju_cpfcnpj": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::ajudante.ajudante"
+    }
+  }
+}

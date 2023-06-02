@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ongs",
+  "info": {
+    "singularName": "ong",
+    "pluralName": "ongs",
+    "displayName": "ongs"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ong_id": {
+      "type": "uid"
+    },
+    "ong_nome": {
+      "type": "string",
+      "required": true
+    },
+    "ong_razao_social": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    }
+  }
+}

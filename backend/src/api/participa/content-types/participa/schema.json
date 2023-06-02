@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "participas",
+  "info": {
+    "singularName": "participa",
+    "pluralName": "participas",
+    "displayName": "participa"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ong_id": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::ong.ong"
+    },
+    "aju_cpfcnpj": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::voluntario.voluntario"
+    },
+    "par_data_entrada": {
+      "type": "date",
+      "required": true
+    },
+    "par_data_saida": {
+      "type": "date"
+    }
+  }
+}

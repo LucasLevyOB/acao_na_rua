@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "ong_enderecos",
+  "info": {
+    "singularName": "ong-endereco",
+    "pluralName": "ong-enderecos",
+    "displayName": "ong_endereco"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ong_id": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::ong.ong"
+    },
+    "end_rua": {
+      "type": "string"
+    },
+    "end_bairro": {
+      "type": "string"
+    },
+    "end_numero": {
+      "type": "string"
+    }
+  }
+}

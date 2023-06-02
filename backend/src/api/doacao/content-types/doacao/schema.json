@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "doacaos",
+  "info": {
+    "singularName": "doacao",
+    "pluralName": "doacaos",
+    "displayName": "doacao"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "doa_id": {
+      "type": "uid",
+      "required": true
+    },
+    "ong_id": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::ong.ong"
+    },
+    "aju_cpfcnpj": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::doador.doador"
+    },
+    "doa_data": {
+      "type": "date",
+      "required": true
+    }
+  }
+}

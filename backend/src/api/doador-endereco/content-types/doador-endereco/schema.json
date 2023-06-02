@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "doador_enderecos",
+  "info": {
+    "singularName": "doador-endereco",
+    "pluralName": "doador-enderecos",
+    "displayName": "doador_endereco"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "aju_cpfcnpj": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::doador.doador"
+    },
+    "dnd_rua": {
+      "type": "string",
+      "required": false
+    },
+    "dnd_bairro": {
+      "type": "string",
+      "required": true
+    },
+    "dnd_numero": {
+      "type": "integer",
+      "required": true
+    }
+  }
+}
