@@ -1,47 +1,112 @@
-<script setup lang="ts">
-</script>
-
 <template>
-  <div id="menu">
-	  <ul>
-		<li><a href="link1.htm"><v-icon color="warning" icon="mdi-alert" size="large"></v-icon></a></li>
-		<li><a href="link2.htm">link2</a></li>
-		<li><a href="link3.htm">link3</a></li>
-		<li><a href="link4.htm">link4</a></li>
-		<li><a href="link5.htm">link5</a></li>
-	  </ul>
-	</div>
+  <div class="half-screen">
+    <div class="ilustration"></div>
+    <div class="content">
+      <h1>Bem-vindo à Ação de Rua</h1>
+      <div class="buttonLogar">
+        <button>Logar</button>
+      </div>
+      <div class="buttonVistante">
+        <button>Visitante</button>
+      </div>
+    </div>
+  </div> 
 </template>
 
 <style>
-
-.menu_lateral {
+.ilustration{
+  width: 507.99px;
+  height: 507.43px;
+  background: url("img/Illustration.png");
+  background-position: center center;
+  background-size: cover;
   position: absolute;
-  width: 122px;
-  height: 930px;
-  left: 0px;
-  top: 93.23px;
-
-  filter: drop-shadow(7px 4px 6px rgba(0, 0, 0, 0.2));
+  top: 236px;
+  left: 55px;
 }
 
-.fundo_background{
-  position: absolute;
-  width: 121.53px;
-  height: 930px;
-  left: 0.18px;
-  top: 0px;
+body {
+  box-sizing: border-box;
 
-  background: #8A2DD6;
-  box-shadow: 4px 0px 9px rgba(0, 0, 0, 0.25);
-  border-radius: 0px;
+  position: relative;
+  width: 1440px;
+  height: 1024px;
+
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 17px;
 }
 
-.itens_menu_1{
-  position: absolute;
-  width: 121.53px;
-  height: 55.85px;
-  left: 0.24px;
-  top: 166.95px;
-}
+    .half-screen {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      width: 100%;
+    }
+
+    .half-screen .image {
+      flex: 1;
+      background-image: url('img/Illustration.png');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .half-screen .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .content h1 {
+      position: absolute;
+      left: 53.19%;
+      right: 12.64%;
+      top: 25.98%;
+      bottom: 55.47%;
+
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 60px;
+      line-height: 135.5%;
+      /* or 81px */
+
+
+      /* Black */
+
+      color: #2F2F2F;
+
+    }
+
+    .content .buttonLogar {
+      position: absolute;
+      left: 68.75%;
+      right: 27.78%;
+      top: 56.93%;
+      bottom: 40.92%;
+
+      font-family: 'Poppins';
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 135.5%;
+      /* identical to box height, or 22px */
+
+
+      color: #FFFFFF;
+    }
+
+    .content .buttonLogar button {
+      position: relative;
+      left: 47.01%;
+      right: 6.39%;
+      top: 54.3%;
+      bottom: 38.18%;
+
+      background: #8A2DD6;
+      border-radius: 8px;
+    }
+
 </style>
