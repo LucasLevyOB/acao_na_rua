@@ -1,4 +1,6 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import piniaPliginPersistedState from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 
 // Vuetify
@@ -9,9 +11,17 @@ import * as directives from 'vuetify/directives'
 import "@mdi/font/css/materialdesignicons.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 
+const pinia = createPinia()
+pinia.use(piniaPliginPersistedState)
+
 const vuetify = createVuetify({
   components,
   directives,
 })
 
-createApp(App).use(vuetify).mount('#app')
+const app = createApp(App)
+
+app.use(pinia)
+app.use(vuetify)
+
+app.mount('#app')
