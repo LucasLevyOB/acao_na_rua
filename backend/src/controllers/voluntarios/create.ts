@@ -14,23 +14,22 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
         const id_role = 2;
 
-        const [vol_id] = await connection("voluntario").insert({ vol_cpf, vol_nome, id_role, vol_senha, vol_setor });
+        const [vol_id] = await connection("voluntarios").insert({ vol_cpf, vol_nome, id_role, vol_senha, vol_setor });
 
         if (!vol_id) {
             const response = new BaseApiResponse({ success: false, message: "Erro ao inserir voluntario" });
             return res.status(500).json(response);
         }
-        
-        // inserir na tabela ong_voluntario
-        const [ong_vol_id] = await connection("ong_voluntario").insert({ ong_id, vol_id });
+
+        const [ong_vol_id] = await connection("participa").insert({ ong_id, vol_cpf });
 
         if (!ong_vol_id) {
-            await connection("voluntario").where({ vol_id }).delete();
+            await connection("voluntarios").where({ vol_cpf }).delete();
             const response = new BaseApiResponse({ success: false, message: "Erro ao inserir voluntario" });
             return res.status(500).json(response);
         }
 
-        const response = new BaseApiResponse<{ vol_id: number }>({ success: true, data: { vol_id } });
+        const response = new BaseApiResponse<{ vol_cpf: string }>({ success: true, data: { vol_cpf } });
         return res.json(response);
 
     } catch (error) {

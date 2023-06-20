@@ -44,3 +44,37 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export default create;
+
+/*
+table doacao {
+    id_doacao integer [pk, increment]
+    ong_id integer [ref: > ong.ong_id]
+    doa_cpfcnpj varchar(14)
+    doa_nome varchar(128)
+    doa_data date [default: `now()`]
+}
+*/
+
+/*
+table item_doacao {
+    itd_id integer [pk, increment]
+    id_doacao integer [ref: > doacao.id_doacao]
+    itd_nome varchar(120) [not null]
+    itd_quantidade integer [default: 1]
+    itd_categoria varchar(120)
+    itd_validade date
+}
+*/
+
+// crie o body de uma requisição POST para o endpoint /doacoes com os seguintes dados:
+// {
+//     "ong_id": 1,
+//     "doa_cpfcnpj": "12345678901",
+//     "doa_nome": "Francisco da Silva",
+    // "item_doacao": {
+    //     "itd_nome": "Arroz",
+    //     "itd_quantidade": 10,
+    //     "itd_categoria": "Alimentos",
+    //     "itd_validade": "2021-12-31T00:00:00.000Z"
+    // }
+// }

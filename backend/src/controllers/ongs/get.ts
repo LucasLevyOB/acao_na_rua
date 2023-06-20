@@ -1,11 +1,3 @@
-/*
-table ong {
-  ong_id  integer [pk, increment]
-  ong_nome varchar(120) [not null]
-  ong_razao_social varchar(120) [not null]
-}
-*/
-
 import type { NextFunction, Request, Response } from "express";
 
 import connection from "../../database/connection";

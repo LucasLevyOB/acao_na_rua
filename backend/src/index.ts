@@ -1,5 +1,6 @@
 import express, { ErrorRequestHandler } from "express";
 import type { NextFunction, Request, Response } from "express";
+
 import cors from "cors";
 import dotenv from "dotenv";
 
@@ -18,13 +19,13 @@ app.use(routes);
 app.use((req: Request, res: Response, next: NextFunction) => {
     const error = new Error();
     error.status = 404;
-    // console.log(error)
+    console.log(error)
     next(error);
 });
   
 // catch all
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-    // console.log(error);
+    console.log(error);
     // console.log(req);
     // console.log(res);
     // console.log(next);

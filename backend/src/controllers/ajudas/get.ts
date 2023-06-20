@@ -6,7 +6,7 @@ import Ajuda from "../../models/Ajuda";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const ajudas: Ajuda[] = await connection("ajuda").select("*");
+        const ajudas: Ajuda[] = await connection("ajudas").select("*");
         const response = new BaseApiResponse<Ajuda[]>({ success: true, data: ajudas });
 
         return res.json(response);

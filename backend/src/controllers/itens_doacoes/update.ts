@@ -7,16 +7,14 @@ import ItemDoacao from "../../models/ItemDoacao";
 const update = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { itd_id } = req.params;
-        const { id_doacao, itd_nome, itd_quantidade, itd_categoria, itd_validade } = req.body;
+        const { itd_nome, itd_quantidade, itd_categoria, itd_validade } = req.body;
 
-        if (!itd_id || !id_doacao || !itd_nome || !itd_quantidade || !itd_categoria || !itd_validade) {
+        if (!itd_id || !itd_nome || !itd_quantidade || !itd_categoria || !itd_validade) {
             const response = new BaseApiResponse({ success: false, message: "Dados inválidos" });
             return res.status(400).json(response);
         }
 
-        const itemDoacao = new ItemDoacao({ itd_id: parseInt(itd_id), id_doacao, itd_nome, itd_quantidade, itd_categoria, itd_validade });
-
-        const updated = await connection("item_doacao").where({ itd_id }).update(itemDoacao);
+        const updated = await connection("item_doacao").where({ itd_id }).update({ itd_nome, itd_quantidade, itd_categoria, itd_validade });
 
         if (!updated) {
             const response = new BaseApiResponse({ success: false, message: "Erro ao atualizar item de doação" });

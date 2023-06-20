@@ -26,10 +26,19 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
             return res.status(400).json({ success: false, message: "Dados inválidos" });
         }
 
-        const updated = await connection("ajuda").where({ ajd_id }).update({ ong_id, pes_id, itd_id, ajd_qtde_item, ajd_data });
+        const ajuda = await connection("ajudas").where({ ajd_id }).first();
+        const updated = await connection("ajudas").where({ ajd_id }).update({ ong_id, pes_id, itd_id, ajd_qtde_item, ajd_data });
 
         if (!updated) {
             return res.status(500).json({ success: false, message: "Erro ao atualizar ajuda" });
+        }
+
+        const itemDoacao = await connection("item_doacao").where({ itd_id }).first();
+        const updatedItemDoacao = await connection("item_doacao").where({ itd_id }).update({ itd_quantidade: itemDoacao.itd_quantidade + ajuda.ajd_qtde_item - ajd_qtde_item });
+
+        if (!updatedItemDoacao) {
+            const response = new BaseApiResponse({ success: true, message: "Ajuda atualizada com sucesso, porém houve um erro ao atualizar o item do banco, faça isso manuamente." });
+            return res.status(500).json(response);
         }
 
         return res.json({ success: true, data: { updated } });

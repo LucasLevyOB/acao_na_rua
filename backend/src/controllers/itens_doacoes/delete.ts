@@ -12,10 +12,19 @@ const deleteItemDoacao = async (req: Request, res: Response, next: NextFunction)
             return res.status(400).json(response);
         }
 
+        const itemDeletado = await connection("item_doacao").where({ itd_id }).first();
+
         const itemDoacao = await connection("item_doacao").where({ itd_id }).delete();
 
         if (!itemDoacao) {
             const response = new BaseApiResponse({ success: false, message: "Erro ao deletar item de doação" });
+            return res.status(500).json(response);
+        }
+
+        const doacao = await connection("doacao").where({ id_doacao: itemDeletado.id_doacao }).delete();
+
+        if (!doacao) {
+            const response = new BaseApiResponse({ success: false, message: "Erro ao deletar doação" });
             return res.status(500).json(response);
         }
 

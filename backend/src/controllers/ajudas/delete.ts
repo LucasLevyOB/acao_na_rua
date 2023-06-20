@@ -25,11 +25,15 @@ const deleteAjuda = async (req: Request, res: Response, next: NextFunction) => {
             return res.status(400).json({ success: false, message: "Dados inválidos" });
         }
 
-        const deleted = await connection("ajuda").where({ ajd_id }).delete();
+        const ajuda = await connection("ajudas").where({ ajd_id }).first();
+        const deleted = await connection("ajudas").where({ ajd_id }).delete();
 
         if (!deleted) {
             return res.status(500).json({ success: false, message: "Erro ao excluir ajuda" });
         }
+
+        const itemDoacao = await connection("item_doacao").where({ itd_id: ajuda.itd_id }).first();
+        const updatedItemDoacao = await connection("item_doacao").where({ itd_id: ajuda.itd_id }).update({ itd_quantidade: itemDoacao.itd_quantidade + ajuda.ajd_qtde_item });
 
         return res.json({ success: true, data: { deleted } });
 

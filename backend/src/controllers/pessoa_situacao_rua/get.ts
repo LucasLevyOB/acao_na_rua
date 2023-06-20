@@ -7,7 +7,7 @@ import PessoaSituacaoRua from "../../models/PessoaSituacaoRua";
 
 const get = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const pessoasSituacaoRua: PessoaSituacaoRua[] = await connection("pessoas_situacao_rua").select("*");
+        const pessoasSituacaoRua: PessoaSituacaoRua[] = await connection("pessoa_situacao_rua").select("*");
         const response = new BaseApiResponse<PessoaSituacaoRua[]>({ success: true, data: pessoasSituacaoRua });
 
         return res.json(response);

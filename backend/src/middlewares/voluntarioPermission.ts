@@ -7,15 +7,15 @@ import Administrador from "../models/Adminstrador";
 
 const voluntarioPermission = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { email } = req.params;
+        const { email_cpf } = req.params;
 
-        if (!email) {
+        if (!email_cpf) {
             const response = new BaseApiResponse({ success: false, message: "Dados inválidos" });
             return res.status(400).json(response);
         }
 
-        const [voluntario]: Voluntario[] = await connection("voluntarios").select("*").where({ vol_email: email });
-        const [administrador]: Administrador[] = await connection("administradores").select("*").where({ adm_email: email });
+        const [voluntario]: Voluntario[] = await connection("voluntarios").select("*").where({ vol_cpf: email_cpf });
+        const [administrador]: Administrador[] = await connection("administradores").select("*").where({ adm_email: email_cpf });
 
         if (!voluntario && !administrador) {
             const response = new BaseApiResponse({ success: false, message: "Usuário não encontrado" });
