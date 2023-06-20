@@ -13,8 +13,8 @@ import itens_doacoes from "./controllers/itens_doacoes";
 
 import { checkLogged, adminPermission, voluntarioPermission } from "./middlewares";
 
-routes.post("/login", auth.login);
-routes.get("/token", auth.token);
+routes.post("/auth/login", auth.login);
+routes.get("/auth/token", auth.token);
 routes.post("/administradores", administradores.create);
 routes.get("/ongs", ongs.get);
 
