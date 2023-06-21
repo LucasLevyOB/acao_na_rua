@@ -1,15 +1,41 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+
+</script>
 
 <template>
-    <div class="half-screen">
+    <div class="d-flex ">
     <div class="ilustration"></div>
     <div class="content">
-      <h1>Bem-vindo à Ação de Rua</h1>
-      <div class="buttonLogar">
-        <button>Logar</button>
-      </div>
-      <div class="buttonVistante">
-        <button>Visitante</button>
+      <h1>Bem-vindo ao <br><span class="spn_acao_rua">Ação na Rua</span></h1>
+      <div class="btn_buttons">
+        <div class="btn_logar">
+          <v-btn
+          :disabled="loading"
+          :loading="loading"
+          block
+          class="text-none mb-4 text_btn"
+          color="#8A2DD6"
+          size="x-large"
+          variant="flat"
+          @click="loading = !loading"
+        >
+          Entrar
+        </v-btn>
+        </div>
+        <div class="btn_visitante">
+          <v-btn
+          :disabled="loading"
+          :loading="loading"
+          block
+          class="text-none mb-4 text_btn"
+          color="#8A2DD6"
+          size="x-large"
+          variant="flat"
+          @click="loading = !loading"
+        >
+          Visitante
+        </v-btn>
+        </div>
       </div>
     </div>
   </div>
@@ -22,93 +48,86 @@
   background: url("../img/Illustration.png");
   background-position: center center;
   background-size: cover;
-  position: absolute;
   top: 236px;
   left: 55px;
 }
-
-body {
-  box-sizing: border-box;
-
-  position: relative;
-  width: 1440px;
-  height: 1024px;
-
-  background: #FFFFFF;
-  border: 1px solid #000000;
-  border-radius: 17px;
+.content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+.content .btn_buttons{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 50px;
 }
 
-    .half-screen {
-      display: flex;
-      flex-direction: row;
-      height: 100%;
-      width: 100%;
-    }
+.content .btn_logar{
+  max-width:500px;
+  width: 100%;
+  left: 47.01%;
+  right: 6.39%;
+  top: 54.3%;
+  bottom: 38.18%;
+ 
+}
 
-    .half-screen .image {
-      flex: 1;
-      background-image: url('../img/Illustration.png');
-      background-size: cover;
-      background-position: center;
-    }
+.content .btn_visitante{
+  max-width:500px;
+  width: 100%;
+  left: 46.94%;
+  right: 6.46%;
+  top: 64.84%;
+  bottom: 27.64%;
 
-    .half-screen .content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+}
 
-    .content h1 {
-      position: absolute;
-      left: 53.19%;
-      right: 12.64%;
-      top: 25.98%;
-      bottom: 55.47%;
-
-      font-family: 'Poppins';
-      font-style: normal;
-      font-weight: 500;
-      font-size: 60px;
-      line-height: 135.5%;
-      /* or 81px */
+.spn_acao_rua{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 900;
+  font-size: 76px;
+  line-height: 135.5%;
+  /* or 103px */
 
 
-      /* Black */
-
-      color: #2F2F2F;
-
-    }
-
-    .content .buttonLogar {
-      position: absolute;
-      left: 68.75%;
-      right: 27.78%;
-      top: 56.93%;
-      bottom: 40.92%;
-
-      font-family: 'Poppins';
-      font-style: normal;
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 135.5%;
-      /* identical to box height, or 22px */
+  color: #8A2DD6;
+}
 
 
-      color: #FFFFFF;
-    }
 
-    .content .buttonLogar button {
-      position: relative;
-      left: 47.01%;
-      right: 6.39%;
-      top: 54.3%;
-      bottom: 38.18%;
+.content h1 {
 
-      background: #8A2DD6;
-      border-radius: 8px;
-    }
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 60px;
+    line-height: 135.5%;
+    /* or 81px */
+
+
+    /* Black */
+
+    color: #2F2F2F;
+
+}
+
+.text_btn {
+
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 135.5%;
+  /* identical to box height, or 22px */
+
+
+  color: #FFFFFF;
+}
+
 
 </style>
