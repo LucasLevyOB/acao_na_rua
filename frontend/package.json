@@ -15,6 +15,7 @@
     "material-design-icons-iconfont": "^6.7.0",
     "pinia": "^2.1.4",
     "pinia-plugin-persistedstate": "^3.1.0",
+    "v-mask": "^2.3.0",
     "vue": "^3.2.47",
     "vue-router": "^4.2.2",
     "vuetify": "^3.3.4"

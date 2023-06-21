@@ -1,19 +1,12 @@
 <script lang="ts">
 
 export default {
-    data () {
-      return {
-        show1: false,
-        show2: true,
-        password: 'Password',
-        rules: {
-          required: value => !!value || 'Required.',
-          min: v => v.length >= 8 || 'Min 8 characters',
-          emailMatch: () => (`The email and password you entered don't match`),
-        },
-      }
-    },
+    data: () => ({
+      visible: false,
+      mask: 'credit-card'
+    }),
   }
+
 
 </script>
 
@@ -35,26 +28,23 @@ export default {
         @submit.prevent="onSubmit"
       >
         <v-text-field
-          v-model="CPF"
-          :readonly="loading"
-          :rules="[required]"
-          class="mb-2 input_texts_esp"
-          clearable
-          label="CPF"
-          placeholder="XXX.XXX.XXX-XX"
+        class="input_texts_esp"
+        v-model="mask"
+        density="compact"
+        placeholder="CPF"
+        prepend-inner-icon="mdi-email-outline"
+        variant="outlined"
         ></v-text-field>
 
         <v-text-field
           class="input_texts_esp"
-          v-model="password"
-          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-          :rules="[rules.required, rules.min]"
-          :type="show1 ? 'text' : 'password'"
-          name="input-10-1"
-          label="Senha"
-          hint="Digite pelo menos 8 caracteres"
-          counter
-          @click:append="show1 = !show1"
+          :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+          :type="visible ? 'text' : 'password'"
+          density="compact"
+          placeholder="Enter your password"
+          prepend-inner-icon="mdi-lock-outline"
+          variant="outlined"
+          @click:append-inner="visible = !visible"
         ></v-text-field>
 
         <br>
@@ -130,6 +120,10 @@ export default {
   margin: auto;
   margin-top: 25px;
 
+}
+
+.v-form .v-input .v-input__append{
+  background-color: #8A2DD6;
 }
 
 .content .btn_buttons{
