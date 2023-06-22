@@ -1,3 +1,5 @@
+import Administrador from "../../../models/Adminstrador";
+import Voluntario from "../../../models/Voluntario";
 import BaseAPI from "../../../services/BaseAPI";
 import { BaseAPIResponse } from "../../../types";
 
@@ -6,6 +8,21 @@ export default class AuthService extends BaseAPI {
         return {
             baseURL: "http://localhost:3001/auth",
         };
+    }
+
+    public async login(emailCpf: string, senha: string): Promise<BaseAPIResponse<{ auth: Administrador | Voluntario, token: string }>> {
+        try {
+            const isEmail = emailCpf.includes("@");
+
+            const response = await this.request.post("/login", { [isEmail ? 'email' : 'cpf']: emailCpf, senha });
+
+            return response.data;
+        } catch (error) {
+            return {
+                success: false,
+                message: "Erro ao fazer login",
+            };
+        }
     }
 
     async isValidtoken(): Promise<BaseAPIResponse<undefined>> {

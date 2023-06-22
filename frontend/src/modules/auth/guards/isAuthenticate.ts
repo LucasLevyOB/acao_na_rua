@@ -1,22 +1,18 @@
 import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
+
 import AuthService from "../services/AuthService";
+import publicRoutes from "../../../router/publicRoutes";
 
-const isAuthenticate = async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    // const authService = new AuthService();
+const isAuthenticate = async (to: RouteLocationNormalized, _: RouteLocationNormalized, next: NavigationGuardNext) => {
+    const authService = new AuthService();
 
-    // console.log("isAuthenticate");
+    const response = await authService.isValidtoken();
 
-    // const response = await authService.isValidtoken();
-
-    // console.log('isAuthenticate response');
-
-    // console.log(response);
-
-    // if (response.success) {
-    //     next();
-    // } else {
-    //     to.name === "Login" ? next() : next({ name: "Login" });
-    // }
+    if (response.success) {
+        next();
+    } else {
+        publicRoutes.findIndex(route => route.name === to.name as string) !== -1 ? next() : next({ name: "Home" });
+    }
     next();
 };
 

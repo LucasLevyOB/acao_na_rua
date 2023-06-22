@@ -23,7 +23,7 @@ export const useAuthStore = defineStore(
         const auth: Ref<AuthState> = ref({
             token: '',
             name: '',
-            role: 'voluntario',
+            role: 'visitante',
         });
 
         const isAdmin = computed(() => auth.value.role === 'admin');
