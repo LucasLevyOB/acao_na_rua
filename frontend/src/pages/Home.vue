@@ -1,12 +1,7 @@
-<script lang="ts">
+<script lang="ts" setup>
+import { ref } from 'vue';
 
-export default {
-    data: () => ({
-      visible: false,
-      mask: 'credit-card'
-    }),
-  }
-
+      const visible = ref(false);
 
 </script>
 
@@ -32,6 +27,15 @@ export default {
         v-model="mask"
         density="compact"
         placeholder="CPF"
+        prepend-inner-icon="mdi-email-outline"
+        variant="outlined"
+        ></v-text-field>
+
+        <v-text-field
+        class="input_texts_esp"
+        v-model="mask"
+        density="compact"
+        placeholder="Email"
         prepend-inner-icon="mdi-email-outline"
         variant="outlined"
         ></v-text-field>
@@ -64,6 +68,7 @@ export default {
         >
           Entrar
         </v-btn>
+        <p>Ainda não tem uma conta?<a href="">Cadastre-se</a></p>
         </div>
       </div>
     </div>
@@ -154,6 +159,22 @@ export default {
 
 }
 
+a{
+  text-decoration: none;
+  color: var(--primary-color, #6358DC);
+  font-size: 16px;
+  font-family: Poppins;
+  font-weight: 600;
+  line-height: 135.5%;
+}
+p{
+  text-align: center;
+  color: #5B5B5B;
+  font-size: 16px;
+  font-family: Poppins;
+  font-weight: 500;
+  line-height: 135.5%;
+}
 
 
 h1 {
