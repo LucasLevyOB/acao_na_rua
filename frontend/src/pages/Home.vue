@@ -1,7 +1,26 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref} from 'vue';
 
-      const visible = ref(false);
+const visible = ref(false);
+const form = ref(false);
+const name = ref(null);
+const email = ref(null);
+const password = ref(null);
+const loading = ref(false);
+
+const onSubmit = () => {
+  if (!form.value) return;
+
+  loading.value = true;
+
+  setTimeout(() => {
+    loading.value = false;
+  }, 2000);
+};
+
+const required = (v:String) => {
+  return !!v || 'Este campo é necessário';
+};
 
 </script>
 
@@ -9,31 +28,27 @@ import { ref } from 'vue';
     <div class="d-flex ">
     <div class="ilustration"></div>
     <div class="content">
-      <div class="tabs"><v-btn variant="text" class="tabs_action tabs_texts">
-            Voluntário
-          </v-btn>
-          <v-btn variant="text" class="tabs_texts">
-            Administrador
-          </v-btn>
-      </div>
-      <h1>Entrar</h1>
+      <h1>Cadastrar</h1>
       <div class="input_texts">
         <v-form
         v-model="form"
-        @submit.prevent="onSubmit"
-      >
+        @submit.prevent="onSubmit">
+          
         <v-text-field
+        v-model="name"
+        :rules="[required]"
         class="input_texts_esp"
-        v-model="mask"
         density="compact"
-        placeholder="CPF"
-        prepend-inner-icon="mdi-email-outline"
+        placeholder="Nome"
+        prepend-inner-icon="mdi-account-circle-outline"
         variant="outlined"
+        required
         ></v-text-field>
 
         <v-text-field
+        v-model="email"
+        :rules="[required]"
         class="input_texts_esp"
-        v-model="mask"
         density="compact"
         placeholder="Email"
         prepend-inner-icon="mdi-email-outline"
@@ -41,11 +56,13 @@ import { ref } from 'vue';
         ></v-text-field>
 
         <v-text-field
+          v-model="password"
+          :rules="[required]"
           class="input_texts_esp"
           :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
           :type="visible ? 'text' : 'password'"
           density="compact"
-          placeholder="Enter your password"
+          placeholder="Digite sua senha"
           prepend-inner-icon="mdi-lock-outline"
           variant="outlined"
           @click:append-inner="visible = !visible"
@@ -55,9 +72,9 @@ import { ref } from 'vue';
       </v-form>
       </div>
       <div class="btn_buttons">
-        <div class="btn_logar">
+        <div class="btn_cadastrar">
           <v-btn
-          :disabled="loading"
+          :disabled="!form"
           :loading="loading"
           block
           class="text-none mb-4 text_btn"
@@ -66,9 +83,8 @@ import { ref } from 'vue';
           variant="flat"
           @click="loading = !loading"
         >
-          Entrar
+          Cadastrar
         </v-btn>
-        <p>Ainda não tem uma conta?<a href="">Cadastre-se</a></p>
         </div>
       </div>
     </div>
@@ -90,27 +106,6 @@ import { ref } from 'vue';
   flex-direction: column;
   justify-content: center;
   flex: 1;
-}
-
-.tabs{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 50px;
-
-  
-}
-
-.tabs_texts{
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 42px;
-}
-
-.tabs_action{
-  border-bottom: 3px solid #8A2DD6;
 }
 
 .input_texts{
@@ -139,7 +134,7 @@ import { ref } from 'vue';
   margin-top: 50px;
 }
 
-.content .btn_logar{
+.content .btn_cadastrar{
   max-width:500px;
   width: 100%;
   left: 47.01%;
@@ -148,34 +143,6 @@ import { ref } from 'vue';
   bottom: 38.18%;
  
 }
-
-.content .btn_visitante{
-  max-width:500px;
-  width: 100%;
-  left: 46.94%;
-  right: 6.46%;
-  top: 64.84%;
-  bottom: 27.64%;
-
-}
-
-a{
-  text-decoration: none;
-  color: var(--primary-color, #6358DC);
-  font-size: 16px;
-  font-family: Poppins;
-  font-weight: 600;
-  line-height: 135.5%;
-}
-p{
-  text-align: center;
-  color: #5B5B5B;
-  font-size: 16px;
-  font-family: Poppins;
-  font-weight: 500;
-  line-height: 135.5%;
-}
-
 
 h1 {
 
