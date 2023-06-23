@@ -1,179 +1,84 @@
-<script lang="ts" setup>
-import { ref} from 'vue';
+<script>
+export default {
+    data: () => ({
+      loaded: false,
+      loading: false,
+    }),
 
-const visible = ref(false);
-const form = ref(false);
-const name = ref(null);
-const email = ref(null);
-const password = ref(null);
-const loading = ref(false);
+    methods: {
+      onClick () {
+        this.loading = true
 
-const onSubmit = () => {
-  if (!form.value) return;
-
-  loading.value = true;
-
-  setTimeout(() => {
-    loading.value = false;
-  }, 2000);
-};
-
-const required = (v:String) => {
-  return !!v || 'Este campo é necessário';
-};
-
+        setTimeout(() => {
+          this.loading = false
+          this.loaded = true
+        }, 2000)
+      },
+    },
+  }
 </script>
 
 <template>
-    <div class="d-flex ">
-    <div class="ilustration"></div>
-    <div class="content">
-      <h1>Cadastrar</h1>
-      <div class="input_texts">
-        <v-form
-        v-model="form"
-        @submit.prevent="onSubmit">
-          
-        <v-text-field
-        v-model="name"
-        :rules="[required]"
-        class="input_texts_esp"
+  <div class="menu">
+    <div class="logo">
+      <img src="../img/logo_1.png" alt="Logo" />
+    </div>
+    <div class="pesquisa_geral">
+      <v-text-field
+        class="pesquisa_esp"
+        :loading="loading"
         density="compact"
-        placeholder="Nome"
-        prepend-inner-icon="mdi-account-circle-outline"
-        variant="outlined"
-        required
-        ></v-text-field>
-
-        <v-text-field
-        v-model="email"
-        :rules="[required]"
-        class="input_texts_esp"
-        density="compact"
-        placeholder="Email"
-        prepend-inner-icon="mdi-email-outline"
-        variant="outlined"
-        ></v-text-field>
-
-        <v-text-field
-          v-model="password"
-          :rules="[required]"
-          class="input_texts_esp"
-          :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-          :type="visible ? 'text' : 'password'"
-          density="compact"
-          placeholder="Digite sua senha"
-          prepend-inner-icon="mdi-lock-outline"
-          variant="outlined"
-          @click:append-inner="visible = !visible"
-        ></v-text-field>
-
-        <br>
-      </v-form>
-      </div>
-      <div class="btn_buttons">
-        <div class="btn_cadastrar">
-          <v-btn
-          :disabled="!form"
-          :loading="loading"
-          block
-          class="text-none mb-4 text_btn"
-          color="#8A2DD6"
-          size="x-large"
-          variant="flat"
-          @click="loading = !loading"
-        >
-          Cadastrar
-        </v-btn>
-        </div>
-      </div>
+        variant="solo"
+        label="Pesquisar"
+        append-inner-icon="mdi-magnify"
+        single-line
+        hide-details
+        @click:append-inner="onClick"
+      ></v-text-field>
+    </div>
+    <div class="user-profile">
+      <v-avatar color="#FFFFFF">
+      <v-icon icon="mdi-account-circle"></v-icon>
+      </v-avatar>
+      <span>{{ nome }}</span>
     </div>
   </div>
 </template>
 
-<style>
-.ilustration{
-  width: 507.99px;
-  height: 507.43px;
-  background: url("../img/Illustration.png");
-  background-position: center center;
-  background-size: cover;
-  top: 236px;
-  left: 55px;
-}
-.content{
+<style scoped>
+.menu {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1;
-}
-
-.input_texts{
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.input_texts_esp{
-  width: 100%;
-  max-width: 500px;
-  margin: auto;
-  margin-top: 25px;
-
-}
-
-.v-form .v-input .v-input__append{
-  background-color: #8A2DD6;
-}
-
-.content .btn_buttons{
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  width: 100%;
-  margin-top: 50px;
+  justify-content: space-between;
+  height: 60px;
+  padding: 10px;
+  background: #8A2DD6;
+  box-shadow: 4px 0px 9px 0px rgba(0, 0, 0, 0.25);
 }
 
-.content .btn_cadastrar{
-  max-width:500px;
-  width: 100%;
-  left: 47.01%;
-  right: 6.39%;
-  top: 54.3%;
-  bottom: 38.18%;
- 
+.logo img {
+  height: 40px;
 }
 
-h1 {
-
+.pesquisa_geral {
   display: flex;
   flex-direction: column;
-  align-items: start;
-  margin-left: 170px;
-
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 900;
-  font-size: 46px;
-  line-height: 135.5%;
-
-
-  color: #8A2DD6;
-
+  width: 100%;
 }
 
-.text_btn {
-
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 135.5%;
-  /* identical to box height, or 22px */
-
-
-  color: #FFFFFF;
+.pesquisa_esp{
+  width: 100%;
+  max-width: 450px;
+  margin: auto;
 }
 
+.user-profile img {
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
 
+.user-profile span {
+  font-weight: bold;
+}
 </style>
