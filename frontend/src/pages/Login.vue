@@ -1,21 +1,37 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
+import type { Ref } from 'vue';
+import useAuthService from '../modules/auth/composables/authService';
+
+type LoginType = 'voluntario' | 'admin';
 
 const visible = ref(false);
 const form = ref(false);
-const cpf = ref(null);
-const email = ref(null);
+const cpf = ref('');
+const email = ref('');
 const password = ref(null);
 const loading = ref(false);
+const loginType: Ref<LoginType> = ref('voluntario');
+const { authLogin } = useAuthService();
 
-const onSubmit = () => {
-  if (!form.value) return;
+const switchLoginType = (type: LoginType) => {
+  loginType.value = type;
+}
 
+const onSubmit = async () => {
+  if (!form.value || !password.value) return;
+
+  if ((loginType.value === 'admin' && !email.value)  || (loginType.value === 'voluntario' && !cpf.value)) {
+    return;
+  }
+  
   loading.value = true;
+  
+  const emailCpf = loginType.value === 'admin' ? email.value : cpf.value;
 
-  setTimeout(() => {
-    loading.value = false;
-  }, 2000);
+  await authLogin(emailCpf, password.value);
+
+  loading.value = false;
 };
 
 const required = (v:String) => {
@@ -28,10 +44,10 @@ const required = (v:String) => {
     <div class="d-flex ">
     <div class="ilustration"></div>
     <div class="content">
-      <div class="tabs"><v-btn variant="text" class="tabs_action tabs_texts">
+      <div class="tabs"><v-btn variant="text" class="tabs_texts" :class="{tabs_action: loginType === 'voluntario'}" @click="switchLoginType('voluntario')">
             Voluntário
           </v-btn>
-          <v-btn variant="text" class="tabs_texts">
+          <v-btn variant="text" class="tabs_texts" :class="{tabs_action: loginType === 'admin'}" @click="switchLoginType('admin')">
             Administrador
           </v-btn>
       </div>
@@ -42,6 +58,7 @@ const required = (v:String) => {
         @submit.prevent="onSubmit"
       >
         <v-text-field
+        v-if="loginType === 'voluntario'"
         v-model="cpf"
         :rules="[required]"
         class="input_texts_esp"
@@ -52,6 +69,7 @@ const required = (v:String) => {
         ></v-text-field>
 
         <v-text-field
+        v-else
         v-model="email"
         :rules="[required]"
         class="input_texts_esp"
@@ -87,7 +105,7 @@ const required = (v:String) => {
           color="#8A2DD6"
           size="x-large"
           variant="flat"
-          @click="loading = !loading"
+          @click="onSubmit"
         >
           Entrar
         </v-btn>

@@ -8,7 +8,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { cpf, senha } = req.body;
 
-        const [voluntario] = await connection("voluntario").select("*").where({ vol_cpf: cpf, vol_senha: senha });
+        const [voluntario] = await connection("voluntarios").select("*").where({ vol_cpf: cpf, vol_senha: senha });
 
         if (!voluntario) {
             const response = new BaseApiResponse({ success: false, message: "Voluntário não encontrado" });
