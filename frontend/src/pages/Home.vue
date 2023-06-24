@@ -1,22 +1,53 @@
-<script>
+<script lang="ts">
+import { ref, computed } from 'vue';
+
 export default {
-    data: () => ({
-      loaded: false,
-      loading: false,
-    }),
+  setup() {
+    const loaded = ref(false);
+    const loading = ref(false);
+    const selectedItem = ref('');
+    const nome = "Nome";
 
-    methods: {
-      onClick () {
-        this.loading = true
+    const buttonText = computed(() => {
+      return loading.value ? 'Carregando...' : 'Clique para carregar';
+    });
 
-        setTimeout(() => {
-          this.loading = false
-          this.loaded = true
-        }, 2000)
-      },
-    },
+    function onClick() {
+      loading.value = true;
+
+      setTimeout(() => {
+        loading.value = false;
+        loaded.value = true;
+      }, 2000);
+    }
+
+    function selectItem(item) {
+      selectedItem.value = item;
+    }
+
+    function handleAboutClick() {
+      // Lógica para o clique no botão "Sobre"
+    }
+
+    function handleLogoutClick() {
+      // Lógica para o clique no botão "Sair"
+    }
+
+    return {
+      nome,
+      loaded,
+      loading,
+      onClick,
+      buttonText,
+      selectedItem,
+      selectItem,
+      handleAboutClick,
+      handleLogoutClick
+    };
   }
+}
 </script>
+
 
 <template>
   <div class="menu">
@@ -43,9 +74,28 @@ export default {
       <span>{{ nome }}</span>
     </div>
   </div>
+  <div>  
+    <v-layout>
+      <v-navigation-drawer
+        expand-on-hover
+        rail
+      >
+        <v-list density="compact" nav>
+          <v-list-item prepend-icon="mdi-view-dashboard" title="Dashboard" value="dashboard"></v-list-item>
+          <v-list-item prepend-icon="mdi-charity" title="ONG" value="ong"></v-list-item>
+          <v-list-item prepend-icon="mdi-account-heart"  title="Ajuda Pessoa" value="ajuda pessoa"></v-list-item>
+          <v-list-item prepend-icon="mdi-account-supervisor" title="Voluntário" value="voluntário"></v-list-item>
+          <v-list-item prepend-icon="mdi-archive" title="Item Doação" value="item doação"></v-list-item>
+          <v-list-item prepend-icon="mdi-hand-coin" color="#fff" title="Doação" value="doação"></v-list-item>
+          <v-list-item prepend-icon="mdi-help-circle" color="#fff" title="Sobre" value="sobre"></v-list-item>
+          <v-list-item prepend-icon="mdi-logout" color="#fff" title="Sair" value="sair"></v-list-item>
+        </v-list>
+      </v-navigation-drawer>
+    </v-layout>
+  </div>
 </template>
 
-<style scoped>
+<style>
 .menu {
   display: flex;
   align-items: center;
@@ -79,6 +129,24 @@ export default {
 }
 
 .user-profile span {
-  font-weight: bold;
+  color: #fff;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  display: inline-block;
+}
+
+.v-navigation-drawer{
+  background-color: #8A2DD6;
+  margin-top: 4.4%;
+
+}
+.v-list .v-icon{
+  color: white;
+}
+
+.v-list-item {
+  color: #fff;
 }
 </style>
