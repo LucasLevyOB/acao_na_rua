@@ -38,6 +38,13 @@ export default abstract class BaseAPI {
         };
 
         this.request = HttpRequests.axiosRegister(config);
+        this.request.interceptors.response.use(
+            (response) => response,
+            (error) => {
+                return Promise.reject(error);
+            }
+        );
+
     }
 
     protected abstract config(): BaseApiUrl;

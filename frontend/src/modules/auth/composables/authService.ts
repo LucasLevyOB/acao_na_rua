@@ -25,8 +25,8 @@ const useAuthService = () => {
             authStore.auth.name = admin.adm_nome;
             authStore.auth.role = 'admin';
             authStore.auth.token = token;
-
             router.push({ name: 'PaginaPrivada' });
+            return;
         }
         
         // volunteer
@@ -37,6 +37,7 @@ const useAuthService = () => {
             authStore.auth.role = 'voluntario';
             authStore.auth.token = token;
             router.push({ name: 'PaginaPrivada' });
+            return;
         }
         
         console.error('Erro ao fazer login');

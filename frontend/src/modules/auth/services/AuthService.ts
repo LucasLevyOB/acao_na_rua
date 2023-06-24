@@ -13,8 +13,12 @@ export default class AuthService extends BaseAPI {
     public async login(emailCpf: string, senha: string): Promise<BaseAPIResponse<{ auth: Administrador | Voluntario, token: string }>> {
         try {
             const isEmail = emailCpf.includes("@");
+            console.log('asdd')
+            const emailCpfObject = { [isEmail ? 'email' : 'cpf']: emailCpf };
 
-            const response = await this.request.post("/login", { [isEmail ? 'email' : 'cpf']: emailCpf, senha });
+            const response = await this.request.post("/login", { ...emailCpfObject, senha });
+
+            console.log(response)
 
             return response.data;
         } catch (error) {
