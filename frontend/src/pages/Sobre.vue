@@ -12,21 +12,6 @@ export default {
       return loading.value ? 'Carregando...' : 'Clique para carregar';
     });
 
-    const files = ref([
-      {
-        color: 'blue',
-        icon: 'mdi-clipboard-text',
-        subtitle: 'Jan 20, 2014',
-        title: 'Vacation itinerary',
-      },
-      {
-        color: 'amber',
-        icon: 'mdi-gesture-tap-button',
-        subtitle: 'Jan 10, 2014',
-        title: 'Kitchen remodel',
-      },
-    ]);
-
     function onClick() {
       loading.value = true;
 
@@ -49,7 +34,6 @@ export default {
     }
 
     return {
-      files,
       nome,
       loaded,
       loading,
@@ -109,34 +93,53 @@ export default {
       </v-navigation-drawer>
     </v-layout>
   </div>
-  <v-card
-    class="mx-auto card-ong"
-  >
-    <v-list lines="two">
+  <div class="sobre">
+    <h1>Sobre Nós</h1>
+    <p>O sistema é voltado para a temática de auxiliar as ONGs no atendimento a pessoas em situação de rua. 
+      Os seus objetivos estão voltados em ajudar as ONGs auxiliando na logística de distribuição de utensílios
+      (comida, roupas, cobertores, água, produtos de higiene pessoal e etc), além disso, coordenar situações de 
+      extrema importância como o recebimento e repasse de doações.</p>
+  </div>
+  <div class="card-container">
+    <div class="card">
+      <div class="circle">
+        <v-icon icon="mdi-hand-heart" size="50"></v-icon>
+      </div>
+      <div class="info">
+        <h3>Compaixão</h3>
+        <p>A compaixão é um dos princípios centrais de nosso site. Buscamos despertar e cultivar a compaixão em nossos leitores, 
+          incentivando-os a agir com bondade e empatia. Acreditamos que através da compaixão podemos criar um mundo mais harmonioso,
+          onde cada indivíduo se preocupa genuinamente com o bem-estar dos outros. Faça parte dessa jornada de compaixão e inspire-se 
+          a fazer a diferença na vida das pessoas ao seu redor.</p>
+      </div>
+    </div>
 
-      <v-list-item
-        v-for="file in files"
-        :key="file.title"
-        :title="file.title"
-        :subtitle="file.subtitle"
-      >
-        <template v-slot:prepend>
-          <v-avatar :color="file.color">
-            <v-icon color="white">{{ file.icon }}</v-icon>
-          </v-avatar>
-        </template>
-        <template v-slot:append>
-          <v-btn class="saiba-mais"
-            color="white"
-            variant="text"
-          >
-          Saiba Mais
-        </v-btn>
-        </template>
-        <v-divider inset></v-divider>
-      </v-list-item>
-    </v-list>
-  </v-card>
+    <div class="card">
+      <div class="circle">
+        <v-icon icon="mdi-account-group" size="50"></v-icon>
+      </div>
+      <div class="info">
+        <h3>Fraternidade</h3>
+        <p>A fraternidade é um pilar essencial em nosso site. Acreditamos na união e no respeito mútuo entre todas as pessoas. 
+          Aqui, buscamos criar uma comunidade acolhedora e inclusiva, onde todos são valorizados e ouvidos. Promovemos o diálogo 
+          construtivo e a colaboração, cultivando um ambiente de solidariedade e compreensão. Junte-se a nós e vamos construir um 
+          mundo mais fraterno juntos.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="circle">
+        <v-icon icon="mdi-account-heart" size="50"></v-icon>
+      </div>
+      <div class="info">
+        <h3>Amor ao próximo</h3>
+        <p>Nosso site promove o amor ao próximo como um valor fundamental. Acreditamos na importância de estender a 
+          mão e ajudar aqueles que estão em necessidade. Por meio de conteúdo inspirador e ações solidárias, buscamos 
+          fortalecer os laços humanos e incentivar a empatia em nossa comunidade. Junte-se a nós nessa jornada de bondade 
+          e compaixão.</p>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style>
@@ -190,12 +193,67 @@ export default {
   color: #fff;
 }
 
-.card-ong{
-  margin-top: 50px;
-  max-width: 1200px;
+.sobre{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.saiba-mais{
-  background-color: #8A2DD6;
+.sobre h1{
+  margin-top: 30px;
+  color: #8a2dd6;
+  font: 600 64px/135.5% "Poppins", sans-serif;
+}
+
+.sobre p{
+  margin-top: 20px;
+  color: #5b5b5b;
+  font: 500 20px/135.5% "Poppins", sans-serif;
+  width: 1156px;
+  height: 198px;
+}
+
+.card-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.card {
+  margin-bottom: 30px;
+  width: 350px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+}
+
+.circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #ccc;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle .v-icon{
+  color: #8A2DD6;
+}
+
+.info {
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .card-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
 }
 </style>
