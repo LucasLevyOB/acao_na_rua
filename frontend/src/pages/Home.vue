@@ -1,5 +1,6 @@
 <script lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed,readonly  } from 'vue';
+import { VDataTable } from 'vuetify/labs/VDataTable';
 
 export default {
   setup() {
@@ -12,21 +13,7 @@ export default {
       return loading.value ? 'Carregando...' : 'Clique para carregar';
     });
 
-    const files = ref([
-      {
-        color: 'blue',
-        icon: 'mdi-clipboard-text',
-        subtitle: 'Jan 20, 2014',
-        title: 'Vacation itinerary',
-      },
-      {
-        color: 'amber',
-        icon: 'mdi-gesture-tap-button',
-        subtitle: 'Jan 10, 2014',
-        title: 'Kitchen remodel',
-      },
-    ]);
-
+    
     function onClick() {
       loading.value = true;
 
@@ -49,7 +36,6 @@ export default {
     }
 
     return {
-      files,
       nome,
       loaded,
       loading,
@@ -58,7 +44,11 @@ export default {
       selectedItem,
       selectItem,
       handleAboutClick,
-      handleLogoutClick
+      handleLogoutClick,
+      search,
+      headers: readonly(headers),
+      desserts,
+      itemKey,
     };
   }
 }
@@ -109,34 +99,26 @@ export default {
       </v-navigation-drawer>
     </v-layout>
   </div>
-  <v-card
-    class="mx-auto card-ong"
-  >
-    <v-list lines="two">
-
-      <v-list-item
-        v-for="file in files"
-        :key="file.title"
-        :title="file.title"
-        :subtitle="file.subtitle"
-      >
-        <template v-slot:prepend>
-          <v-avatar :color="file.color">
-            <v-icon color="white">{{ file.icon }}</v-icon>
-          </v-avatar>
-        </template>
-        <template v-slot:append>
-          <v-btn class="saiba-mais"
-            color="white"
-            variant="text"
-          >
-          Saiba Mais
-        </v-btn>
-        </template>
-        <v-divider inset></v-divider>
-      </v-list-item>
-    </v-list>
+  <div>
+    <v-card>
+    <v-card-title>
+      Nutrition
+      <v-spacer></v-spacer>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        hide-details
+      ></v-text-field>
+    </v-card-title>
+    <v-data-table
+      :headers="headers"
+      :items="desserts"
+      :search="search"
+    ></v-data-table>
   </v-card>
+  </div>
 </template>
 
 <style>
@@ -188,14 +170,5 @@ export default {
 
 .v-list-item {
   color: #fff;
-}
-
-.card-ong{
-  margin-top: 50px;
-  max-width: 1200px;
-}
-
-.saiba-mais{
-  background-color: #8A2DD6;
 }
 </style>
