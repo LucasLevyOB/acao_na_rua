@@ -1,5 +1,9 @@
 <script lang="ts" setup>
 import { ref} from 'vue';
+import { useRouter } from 'vue-router';
+
+import AdministradorService from '../modules/auth/services/AdminstadorService';
+import useToast from '../composables/toast';
 
 const visible = ref(false);
 const form = ref(false);
@@ -7,15 +11,35 @@ const name = ref(null);
 const email = ref(null);
 const password = ref(null);
 const loading = ref(false);
+const adminService = new AdministradorService();
+const toast = useToast();
+const router = useRouter();
 
-const onSubmit = () => {
+const onSubmit = async () => {
   if (!form.value) return;
+
+  if (!name.value || !email.value || !password.value) {
+    return;
+  }
 
   loading.value = true;
 
-  setTimeout(() => {
+  const response = await adminService.create({
+    adm_nome: name.value,
+    adm_email: email.value,
+    adm_senha: password.value,
+  });
+
+  if (!response.success || !response.data?.adm_id) {
+    toast.toastError('Erro ao cadastrar administrador');
     loading.value = false;
-  }, 2000);
+    return;
+  }
+
+  toast.toastSuccess('Administrador cadastrado com sucesso! Faça login para continuar.');
+  router.push('/login');
+
+  loading.value = false;
 };
 
 const required = (v:String) => {
@@ -81,7 +105,7 @@ const required = (v:String) => {
           color="#8A2DD6"
           size="x-large"
           variant="flat"
-          @click="loading = !loading"
+          @click="onSubmit"
         >
           Cadastrar
         </v-btn>
