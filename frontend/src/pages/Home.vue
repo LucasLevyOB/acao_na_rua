@@ -3,15 +3,54 @@ import { ref  } from 'vue';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 
 const search = ref('');
+const headers = [
+      {
+        align: 'start',
+        key: 'nome',
+        sortable: false,
+        title: 'Nome',
+      },
+      { key: 'razaoSocial', title: 'Razão Social' },
+      { key: 'action', title: 'Ação' },
+    ];
+    const desserts = [
+      {
+        nome: 'Item 1',
+        razaoSocial: 'Razão Social 1',
+      },
+      {
+        nome: 'Item 2',
+        razaoSocial: 'Razão Social 2',
+      },
+      {
+        nome: 'Item 3',
+        razaoSocial: 'Razão Social 3',
+      },
+    ];
+
+    function editItem(item) {
+      // Lógica para editar o item
+    }
+
+    function deleteItem(item) {
+      // Lógica para deletar o item
+    }
 
 </script>
 
 
 <template>
-  <div>
+  <div class="tabela">
     <v-card>
     <v-card-title>
-      Nutrition
+      ONGs
+      <v-spacer></v-spacer>
+      <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text">
+        Cadastrar ONG
+      </v-btn>
+      <v-btn height="48" append-icon="mdi-download-outline" variant="text">
+        Exportar
+      </v-btn>
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -25,12 +64,23 @@ const search = ref('');
       :headers="headers"
       :items="desserts"
       :search="search"
-    ></v-data-table>
+    >
+    <template v-slot:item.action="{ item }">
+      <div>
+        <v-btn icon="mdi-pencil" @click="editItem(item)" variant="text"></v-btn>
+        <v-btn icon="mdi-delete" @click="deleteItem(item)" variant="text"></v-btn>
+      </div>
+    </template>
+  </v-data-table>
   </v-card>
   </div>
 </template>
 
 <style>
+body{
+  background-color: #F9F8FE;
+}
+
 .menu {
   display: flex;
   align-items: center;
@@ -79,5 +129,13 @@ const search = ref('');
 
 .v-list-item {
   color: #fff;
+}
+
+.tabela{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  margin:50px 50px 30px;
 }
 </style>
