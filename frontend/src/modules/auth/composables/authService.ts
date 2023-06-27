@@ -3,6 +3,7 @@ import Administrador from "../../../models/Adminstrador";
 import Voluntario from "../../../models/Voluntario";
 import AuthService from "../services/AuthService";
 import { useAuthStore } from "../stores/authStore";
+import {useToast} from 'vue-toast-notification';
 
 const useAuthService = () => {
     const authStore = useAuthStore();
@@ -11,9 +12,16 @@ const useAuthService = () => {
 
     const authLogin = async (emailCpf: string, senha: string) => {
         const response = await authService.login(emailCpf, senha);
+        const toast = useToast();
 
-        if (!response.success || !response.data) {
-            return response;
+        if (!response.success || !response?.data) {
+            toast.open({
+                message: 'Erro ao fazer login',
+                type: 'error',
+                position: 'top-right',
+                duration: 5000,
+            });
+            return;
         }
 
         const { auth, token } = response.data;
@@ -40,7 +48,12 @@ const useAuthService = () => {
             return;
         }
         
-        console.error('Erro ao fazer login');
+        toast.open({
+            message: 'Erro ao fazer login',
+            type: 'error',
+            position: 'top-right',
+            duration: 5000,
+        });
     };
     
     const authLogout = () => {
