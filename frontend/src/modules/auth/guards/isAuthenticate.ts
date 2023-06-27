@@ -11,7 +11,7 @@ const isAuthenticate = async (to: RouteLocationNormalized, _: RouteLocationNorma
     if (response.success) {
         next();
     } else {
-        publicRoutes.findIndex(route => route.name === to.name as string) !== -1 ? next() : next({ name: "Home" });
+        publicRoutes.findIndex(route => route.name === to.name as string) !== -1 ? next() : next({ name: "BoasVindas" });
     }
     next();
 };

@@ -1,8 +1,8 @@
 const publicRoutes = [
     {
-        path: "/",
-        name: "Home",
-        component: import("../pages/Home.vue"),
+        path: "/boas-vindas",
+        name: "BoasVindas",
+        component: import("../pages/BoasVindas.vue"),
     },
     {
         path: '/login',
