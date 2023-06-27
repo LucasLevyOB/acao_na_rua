@@ -3,6 +3,7 @@ import { ref  } from 'vue';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 
 const search = ref('');
+const dialog = ref(false);
 const headers = [
       {
         align: 'start',
@@ -42,20 +43,22 @@ const headers = [
 <template>
   <div class="tabela">
     <v-card>
-    <v-card-title>
+    <v-card-title class="titulo-tabela">
       ONGs
       <v-spacer></v-spacer>
-      <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text">
+      <div class="btn-cad-exp">
+        <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text">
         Cadastrar ONG
       </v-btn>
       <v-btn height="48" append-icon="mdi-download-outline" variant="text">
         Exportar
       </v-btn>
+      </div>
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
-        label="Search"
+        label="Pesquisar"
         single-line
         hide-details
       ></v-text-field>
@@ -66,14 +69,69 @@ const headers = [
       :search="search"
     >
     <template v-slot:item.action="{ item }">
-      <div>
-        <v-btn icon="mdi-pencil" @click="editItem(item)" variant="text"></v-btn>
-        <v-btn icon="mdi-delete" @click="deleteItem(item)" variant="text"></v-btn>
-      </div>
+        <v-btn icon="mdi-pencil-outline" color="#98A9BC" @click="editItem(item)" variant="text"></v-btn>
+        <v-btn icon="mdi-delete-outline" color="#98A9BC" @click="deleteItem(item)" variant="text"></v-btn>
     </template>
-  </v-data-table>
+    </v-data-table>
   </v-card>
   </div>
+  <v-row justify="center">
+    <v-dialog
+      v-model="dialog"
+      persistent
+      width="1024"
+    >
+      <template v-slot:activator="{ props }">
+        <v-btn
+          color="primary"
+          v-bind="props"
+        >
+          Open Dialog
+        </v-btn>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">ONG</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  label="Nome da ONG*"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  label="Razão Social*"
+                  required
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-container>
+          <small>*Indicadores de campos obrigatórios</small>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            variant="outlined"
+            @click="dialog = false"
+          >
+            Fechar
+          </v-btn>
+          <v-btn
+            color="primary"
+            variant="flat"
+            @click="dialog = false"
+          >
+            Editar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
 </template>
 
 <style>
@@ -137,5 +195,24 @@ body{
   justify-content: center;
   flex: 1;
   margin:50px 50px 30px;
+}
+
+.btn-cad-exp{
+  color: #778CA2;
+  font-size: 12px;
+  font-family: Rubik;
+  font-weight: 700;
+  line-height: 16px;
+}
+.titulo-tabela{
+  color: #000;
+  font-size: 33.383px;
+  font-family: Poppins;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.v-card{
+  background-color: #F9F8FE;
 }
 </style>
