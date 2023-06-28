@@ -1,4 +1,20 @@
 <script lang="ts" setup>
+import { ref, watch, onMounted } from 'vue';
+
+ const loading = ref(false);
+
+  watch(loading, (val) => {
+    if (!val) return;
+
+    setTimeout(() => {
+      loading.value = false;
+    }, 2000);
+  });
+
+  // Função para simular o comportamento de inicialização
+  onMounted(() => {
+    loading.value = true;
+  });
 
 </script>
 

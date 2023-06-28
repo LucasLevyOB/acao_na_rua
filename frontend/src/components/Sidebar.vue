@@ -54,24 +54,8 @@ const isVisible = computed({
   color: white;
 }
 
-.v-list-item {
+.v-list-item__content .v-list-item-title {
   color: #fff;
 }
 
-.card-ong{
-  margin-top: 50px;
-  max-width: 1200px;
-}
-
-.saiba-mais{
-  background-color: #8A2DD6;
-  color: #fff;
-}
-
-.texto-lista-itens{
-  color: #000;
-  box-shadow: 5px 3px 5px 0px rgba(0, 0, 0, 0.10);
-  border-radius: 16px;
-
-}
 </style>
