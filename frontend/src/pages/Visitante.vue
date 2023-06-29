@@ -1,20 +1,31 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
+import type { Ref } from 'vue';
 
-const files = ref([
-  {
-    color: '#8A2DD6',
-    icon: 'mdi-charity',
-    subtitle: 'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s',
-    title: 'Santa Maria',
-  },
-  {
-    color: '#8A2DD6',
-    icon: 'mdi-charity',
-    subtitle: 'Lorem Ipsum has been the industrys standard dummy text ever since the 1500s',
-    title: 'Kitchen remodel',
-  },
-]);
+import OngsService from '../services/OngsService';
+import Ong from '../models/Ong';
+import useToast from '../composables/toast';
+import { onMounted } from 'vue';
+
+const ongsService = new OngsService();
+const toast = useToast();
+
+const ongs: Ref<Ong[]> = ref([]);
+
+const loadOngs = async () => {
+  const response = await ongsService.getOngs();
+
+  if (!response.success || !response.data) {
+    toast.toastError('Erro ao carregar ONGs');
+    return;
+  }
+
+  ongs.value = response.data;
+};
+
+onMounted(async () => {
+  await loadOngs();
+});
 
 </script>
 
@@ -22,14 +33,14 @@ const files = ref([
   <h2 class="page-title">ONGs</h2>
   <v-card class="mx-auto card-ong">
     <v-list lines="two">
-      <v-list-item class="texto-lista-itens" v-for="file in files" :key="file.title">
+      <v-list-item class="texto-lista-itens" v-for="ong in ongs" :key="ong.ong_id">
         <template v-slot:default>
-          <v-avatar :color="file.color">
-            <v-icon color="white">{{ file.icon }}</v-icon>
+          <v-avatar color="#8A2DD6">
+            <v-icon color="white">mdi-charity</v-icon>
           </v-avatar>
           <div>
-            <v-list-item-title class="file-title">{{ file.title }}</v-list-item-title>
-            <v-list-item-subtitle class="file-subtitle">{{ file.subtitle }}</v-list-item-subtitle>
+            <v-list-item-title class="file-title">{{ ong.ong_nome }}</v-list-item-title>
+            <v-list-item-subtitle class="file-subtitle">{{ ong.ong_razao_social }}</v-list-item-subtitle>
           </div>
         </template>
       </v-list-item>
