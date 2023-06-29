@@ -16,6 +16,7 @@ interface AuthState {
 export interface AuthStore {
     auth: AuthState;
     isAdmin: boolean;
+    isLogged: boolean;
 }
 
 export const useAuthStore = defineStore(
@@ -30,9 +31,12 @@ export const useAuthStore = defineStore(
 
         const isAdmin = computed(() => auth.value.role === 'admin');
 
+        const isLogged = computed(() => auth.value.token !== '');
+
         return {
             auth,
             isAdmin,
+            isLogged
         };
     }, 
     {

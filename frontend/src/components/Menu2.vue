@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
+import { useAuthStore } from '../modules/auth/stores/authStore';
 
 type Props = {
     isVisible: boolean;
@@ -10,7 +11,7 @@ const emit = defineEmits(['update:isVisible']);
 
 const loaded = ref(false);
 const loading = ref(false);
-const nome = "Nome";
+const authStore = useAuthStore();
 
 function onClick() {
     loading.value = true;
@@ -58,11 +59,11 @@ const toggleSidebar = () => {
         @click:append-inner="onClick"
       ></v-text-field>
     </div>
-    <div class="user-profile">
+    <div v-if="authStore.isLogged" class="user-profile">
       <v-avatar color="#FFFFFF">
       <v-icon icon="mdi-account-circle"></v-icon>
       </v-avatar>
-      <span>{{ nome }}</span>
+      <span>{{ authStore.auth.name }}</span>
     </div>
   </div>
 </template>

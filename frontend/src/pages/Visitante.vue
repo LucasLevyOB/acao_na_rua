@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import type { Ref } from 'vue';
 
 import OngsService from '../services/OngsService';
-import Ong from '../models/Ong';
+import type Ong from '../models/Ong';
 import useToast from '../composables/toast';
-import { onMounted } from 'vue';
 
 const ongsService = new OngsService();
 const toast = useToast();
