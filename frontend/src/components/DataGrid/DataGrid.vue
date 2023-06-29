@@ -92,11 +92,13 @@ defineExpose({
 
 <style scoped>
 .tabela{
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   flex: 1;
-  margin:50px 50px 30px;
 }
 
 .btn-cad-exp{
