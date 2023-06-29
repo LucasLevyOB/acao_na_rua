@@ -1,112 +1,93 @@
 <script lang="ts" setup>
-import { ref  } from 'vue';
-import { VDataTable } from 'vuetify/labs/VDataTable';
+import { ref, onMounted  } from 'vue';
+import type { Ref } from 'vue';
+import OngsService from '../services/OngsService';
+import { useAuthStore } from "../modules/auth/stores/authStore";
+import useToast from '../composables/toast';
+import Ong from '../models/Ong';
+import DataGrid from '../components/DataGrid/DataGrid.vue';
 
-const search = ref('');
+type FormData = {
+  nome: string;
+  razaoSocial: string;
+};
+
+const authStore = useAuthStore();
+const toast = useToast();
+
+const ongsService = new OngsService();
+
+const form: Ref<FormData> = ref<FormData>({
+  nome: '',
+  razaoSocial: '',
+});
 const dialog = ref(false);
-const headers = [
-      {
-        align: 'start',
-        key: 'nome',
-        sortable: false,
-        title: 'Nome',
-      },
-      { key: 'razaoSocial', title: 'Razão Social' },
-      { key: 'action', title: 'Ação' },
-    ];
-    const desserts = [
-      {
-        nome: 'Item 1',
-        razaoSocial: 'Razão Social 1',
-      },
-      {
-        nome: 'Item 2',
-        razaoSocial: 'Razão Social 2',
-      },
-      {
-        nome: 'Item 3',
-        razaoSocial: 'Razão Social 3',
-      },
-    ];
+const isEditing = ref(false);
+const dataGridRef = ref<DataGrid>();
 
-    function editItem(item) {
-      // Lógica para editar o item
-    }
+const openModalCreate = () => {
+  isEditing.value = false;
+  form.value.nome = '';
+  form.value.razaoSocial = '';
+  dialog.value = true;
+};
 
-    function deleteItem(item) {
-      // Lógica para deletar o item
-    }
+const createOng = async () => {
+  if (!form.value.nome || !form.value.razaoSocial || !authStore.auth.id || !authStore.auth?.email) {
+    return;
+  }
+
+  const response = await ongsService.createOng({ ong_nome: form.value.nome, ong_razao_social: form.value.razaoSocial, adm_id: authStore.auth.id });
+  
+  if (!response.success || !response?.data?.ong_id) {
+    toast.toastError('Erro ao criar ONG');
+    return;
+  }
+
+  toast.toastSuccess('ONG criada com sucesso');
+
+  dialog.value = false;
+
+  dataGridRef.value?.refresh();
+};
 
 </script>
 
 
 <template>
-  <div class="tabela">
-    <v-card>
-    <v-card-title class="titulo-tabela">
-      ONGs
-      <v-spacer></v-spacer>
-      <div class="btn-cad-exp">
-        <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text">
-        Cadastrar ONG
+  <DataGrid ref="dataGridRef" title="Ongs" :api="new OngsService()" :loadHeaders="ongsService.getHeaders" :loadItems="ongsService.getOngsByAdmin">
+    <template #inBatchActions>
+      <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text" @click="openModalCreate">
+          Cadastrar ONG
       </v-btn>
-      <v-btn height="48" append-icon="mdi-download-outline" variant="text">
-        Exportar
-      </v-btn>
-      </div>
-      <v-spacer></v-spacer>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Pesquisar"
-        single-line
-        hide-details
-      ></v-text-field>
-    </v-card-title>
-    <v-data-table
-      :headers="headers"
-      :items="desserts"
-      :search="search"
-    >
-    <template v-slot:item.action="{ item }">
-        <v-btn icon="mdi-pencil-outline" color="#98A9BC" @click="editItem(item)" variant="text"></v-btn>
-        <v-btn icon="mdi-delete-outline" color="#98A9BC" @click="deleteItem(item)" variant="text"></v-btn>
     </template>
-    </v-data-table>
-  </v-card>
-  </div>
+  </DataGrid>
   <v-row justify="center">
     <v-dialog
       v-model="dialog"
       persistent
       width="1024"
     >
-      <template v-slot:activator="{ props }">
-        <v-btn
-          color="primary"
-          v-bind="props"
-        >
-          Open Dialog
-        </v-btn>
-      </template>
       <v-card>
         <v-card-title>
-          <span class="text-h5">ONG</span>
+          <span class="text-h5">{{ isEditing ? 'Editar' : 'Criar' }} ONG</span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-row>
               <v-col cols="12">
                 <v-text-field
+                  v-model="form.nome"
                   label="Nome da ONG*"
                   required
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-textarea
+                <v-text-field
+                  v-model="form.razaoSocial"
                   label="Razão Social*"
                   required
-                ></v-textarea>
+                ></v-text-field>
               </v-col>
             </v-row>
           </v-container>
@@ -124,9 +105,9 @@ const headers = [
           <v-btn
             color="primary"
             variant="flat"
-            @click="dialog = false"
+            @click="createOng"
           >
-            Editar
+            {{ isEditing ? 'Editar' : 'Criar' }}
           </v-btn>
         </v-card-actions>
       </v-card>

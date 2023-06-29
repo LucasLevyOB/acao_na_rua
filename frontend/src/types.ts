@@ -5,3 +5,10 @@ export interface BaseAPIResponse<T> {
     message?: string;
     data?: T;
 }
+
+export interface TableHeader {
+    align?: 'start' | 'center' | 'end';
+    key: string;
+    sortable?: boolean;
+    title: string;
+};

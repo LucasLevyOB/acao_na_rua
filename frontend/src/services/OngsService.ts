@@ -1,5 +1,6 @@
 import Ong from "../models/Ong";
-import type { BaseAPIResponse } from "../types";
+import { useAuthStore } from "../modules/auth/stores/authStore";
+import type { BaseAPIResponse, TableHeader } from "../types";
 import BaseAPI from "./BaseAPI";
 
 export interface CreateOngPayload {
@@ -27,9 +28,15 @@ export default class OngsService extends BaseAPI {
         }
     }
 
-    public async getOngsByAdmin(admId: number): Promise<BaseAPIResponse<Ong[]>> {
+    public async getOngsByAdmin(): Promise<BaseAPIResponse<Ong[]>> {
         try {
-            const response = await this.request.get('/ongs', { params: { adm_id: admId } });
+
+            const authStore = useAuthStore();
+            if (!authStore.auth?.email) {
+                throw new Error("Usuário não autenticado");
+            }
+
+            const response = await this.request.get(`/ongs/${authStore.auth.email}`);
             return response.data;
         } catch (error) {
             return {
@@ -41,7 +48,11 @@ export default class OngsService extends BaseAPI {
 
     public async createOng(payload: CreateOngPayload): Promise<BaseAPIResponse<{ ong_id: number }>> {
         try {
-            const response = await this.request.post('/ongs', payload);
+            const authStore = useAuthStore();
+            if (!authStore.auth?.email) {
+                throw new Error("Usuário não autenticado");
+            }
+            const response = await this.request.post(`/ongs/${authStore.auth.email}`, payload);
             return response.data;
         } catch (error) {
             return {
@@ -50,4 +61,21 @@ export default class OngsService extends BaseAPI {
             };
         }
     }
-}
+
+    public getHeaders(): TableHeader[] {
+        return [
+            {
+                align: 'start',
+                key: 'ong_nome',
+                sortable: false,
+                title: 'Nome',
+            },
+            {
+                align: 'start',
+                key: 'ong_razao_social',
+                sortable: false,
+                title: 'Razão Social',
+            }
+        ]
+    }
+};

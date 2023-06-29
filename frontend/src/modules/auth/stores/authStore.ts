@@ -7,6 +7,7 @@ import type { Role } from "../../../types";
 interface AuthState {
     token: string;
     email?: string;
+    id: number;
     name: string;
     cpf?: string;
     role: Role;
@@ -23,6 +24,7 @@ export const useAuthStore = defineStore(
         const auth: Ref<AuthState> = ref({
             token: '',
             name: '',
+            id: 0,
             role: 'visitante',
         });
 

@@ -26,9 +26,10 @@ const useAuthService = () => {
             const admin = auth as Administrador;
             authStore.auth.email = admin.adm_email;
             authStore.auth.name = admin.adm_nome;
+            authStore.auth.id = admin.adm_id;
             authStore.auth.role = 'admin';
             authStore.auth.token = token;
-            router.push({ name: 'PaginaPrivada' });
+            router.push({ name: 'Home' });
             return;
         }
         
@@ -39,7 +40,7 @@ const useAuthService = () => {
             authStore.auth.cpf = volunteer.vol_cpf;
             authStore.auth.role = 'voluntario';
             authStore.auth.token = token;
-            router.push({ name: 'PaginaPrivada' });
+            router.push({ name: 'Home' });
             return;
         }
         
@@ -51,8 +52,9 @@ const useAuthService = () => {
         authStore.auth.email = '';
         authStore.auth.name = '';
         authStore.auth.cpf = '';
+        authStore.auth.id = 0;
         authStore.auth.role = 'visitante';
-        router.push({ name: 'Home' });
+        router.push({ name: 'Login' });
     };
 
     return {
