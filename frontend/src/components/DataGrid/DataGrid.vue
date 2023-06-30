@@ -1,5 +1,5 @@
 <script lang="ts" setup generic="T">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 
@@ -16,11 +16,14 @@ type Props = {
 
 const props = defineProps<Props>();
 
+const progressBar = true;
+
 const headers: Ref<TableHeader[]> = ref([]);
 const items: Ref<T[]> = ref([]);
 const search = ref('');
 const toast = useToast();
 const isLoading = ref(false);
+
 
 const loadHeaders = async () => {
     const response = await props.loadHeaders.call(props.api);
@@ -86,19 +89,30 @@ defineExpose({
                     <slot name="inlineActions" :item="item"></slot>
                 </template>
             </v-data-table>
+            <v-progress-circular v-show="isLoading" slot="progress" color="blue" indeterminate>
+        </v-progress-circular>
         </v-card>
   </div>
 </template>
 
 <style scoped>
+
+.v-progress-circular {
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    position: absolute;
+    margin: 1rem;
+}
 .tabela{
-  width: 100%;
-  padding-left: 20px;
-  padding-right: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1;
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
 }
 
 .btn-cad-exp{
@@ -117,6 +131,8 @@ defineExpose({
 }
 
 .v-card{
+  min-height: 412px;
+  position: relative;
   background-color: #F9F8FE;
 }
 </style>

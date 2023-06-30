@@ -14,6 +14,7 @@ import "@mdi/font/css/materialdesignicons.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import ToastPlugin from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-bootstrap.css';
+import { VuetifyDateAdapter } from 'vuetify/labs/date/adapters/vuetify';
 
 const pinia = createPinia()
 pinia.use(piniaPliginPersistedState)
@@ -22,6 +23,8 @@ const vuetify = createVuetify({
   components,
   directives,
 })
+
+const adapter = VuetifyDateAdapter;
 
 const app = createApp(App)
 

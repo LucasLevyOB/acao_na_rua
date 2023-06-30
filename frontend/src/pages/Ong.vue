@@ -4,14 +4,13 @@ import type { Ref } from 'vue';
 import OngsService from '../services/OngsService';
 import { useAuthStore } from "../modules/auth/stores/authStore";
 import useToast from '../composables/toast';
+import Ong from '../models/Ong';
 import DataGrid from '../components/DataGrid/DataGrid.vue';
 
 type FormData = {
   nome: string;
   razaoSocial: string;
 };
-
-const date = ref(null);
 
 const authStore = useAuthStore();
 const toast = useToast();
@@ -28,13 +27,6 @@ const dataGridRef = ref<DataGrid>();
 
 const openModalCreate = () => {
   isEditing.value = false;
-  form.value.nome = '';
-  form.value.razaoSocial = '';
-  dialog.value = true;
-};
-
-const openModalEdit = () => {
-  isEditing.value = true;
   form.value.nome = '';
   form.value.razaoSocial = '';
   dialog.value = true;
@@ -63,15 +55,11 @@ const createOng = async () => {
 
 
 <template>
-  <DataGrid ref="dataGridRef" title="Item Doado" :api="new OngsService()" :loadHeaders="ongsService.getHeaders" :loadItems="ongsService.getOngsByAdmin">
+  <DataGrid ref="dataGridRef" title="Ongs" :api="new OngsService()" :loadHeaders="ongsService.getHeaders" :loadItems="ongsService.getOngsByAdmin">
     <template #inBatchActions>
       <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text" @click="openModalCreate">
-          Cadastrar Item para Doação
+          Cadastrar ONG
       </v-btn>
-    </template>
-    <template #inlineActions="{item}">
-        <v-btn icon="mdi-pencil-outline" color="#98A9BC" variant="text" @click="openModalEdit"></v-btn>
-        <v-btn icon="mdi-delete-outline" color="#98A9BC" variant="text"></v-btn>
     </template>
   </DataGrid>
   <v-row justify="center">
@@ -82,7 +70,7 @@ const createOng = async () => {
     >
       <v-card>
         <v-card-title>
-          <span class="text-h5">{{ isEditing ? 'Editar' : 'Cadastrar' }} Item para Doação</span>
+          <span class="text-h5">{{ isEditing ? 'Editar' : 'Criar' }} ONG</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -90,32 +78,16 @@ const createOng = async () => {
               <v-col cols="12">
                 <v-text-field
                   v-model="form.nome"
-                  label="Nome do Produto*"
+                  label="Nome da ONG*"
                   required
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field
                   v-model="form.razaoSocial"
-                  label="Quantidade*"
+                  label="Razão Social*"
                   required
                 ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-select
-                  :items="['0-17', '18-29', '30-54', '54+']"
-                  label="Categoria*"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-text-field v-model="date" type="date" />
               </v-col>
             </v-row>
           </v-container>
