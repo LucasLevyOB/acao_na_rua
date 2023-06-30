@@ -1,7 +1,8 @@
 <script lang="ts" setup generic="T">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import { VDataTable } from 'vuetify/labs/VDataTable';
+import useDayjs from '../../composables/dayjs';
 
 import useToast from '../../composables/toast';
 import type { TableHeader, BaseAPIResponse } from '../../types';
@@ -10,19 +11,18 @@ import type BaseAPI from '../../services/BaseAPI';
 type Props = {
     title: string;
     api: BaseAPI,
-    loadHeaders: () => Promise<TableHeader[]>;
+    loadHeaders: () => TableHeader[];
     loadItems: () => Promise<BaseAPIResponse<T[]>>;
 }
 
 const props = defineProps<Props>();
-
-const progressBar = true;
 
 const headers: Ref<TableHeader[]> = ref([]);
 const items: Ref<T[]> = ref([]);
 const search = ref('');
 const toast = useToast();
 const isLoading = ref(false);
+const dayjs = useDayjs();
 
 
 const loadHeaders = async () => {
@@ -35,11 +35,18 @@ const loadItems = async () => {
     const response = await props.loadItems.call(props.api);
     
     if (!response.success || !response.data) {
-        toast.toastError(response.message);
+        toast.toastError(response?.message ? response.message : 'Erro ao carregar dados da tabela');
         return;
     }
 
     items.value = response.data;
+};
+
+const formatValue = (value: string | number, column: TableHeader) => {
+    if (column.type === 'datetime') {
+        return dayjs(value).format('DD/MM/YYYY');
+    }
+    return value;
 };
 
 const refresh = async () => {
@@ -85,8 +92,17 @@ defineExpose({
             :items="items"
             :search="search"
             >
-                <template v-slot:item.action="{ item }">
-                    <slot name="inlineActions" :item="item"></slot>
+                <template v-slot:item="{ item }">
+                    <tr>
+                        <template v-for="column in headers">
+                            <td v-if="column.type !== 'custom'">
+                                {{ formatValue(item.columns[column.key], column) }}
+                            </td>
+                            <td v-else>
+                                <slot name="inlineActions" :item="item"></slot>
+                            </td>
+                        </template>
+                    </tr>
                 </template>
             </v-data-table>
             <v-progress-circular v-show="isLoading" slot="progress" color="blue" indeterminate>

@@ -11,4 +11,5 @@ export interface TableHeader {
     key: string;
     sortable?: boolean;
     title: string;
+    type: 'text' | 'datetime' | 'number' | 'custom';
 };

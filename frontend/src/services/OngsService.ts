@@ -30,13 +30,9 @@ export default class OngsService extends BaseAPI {
 
     public async getOngsByAdmin(): Promise<BaseAPIResponse<Ong[]>> {
         try {
+            const email = this.getAuthEmail();
 
-            const authStore = useAuthStore();
-            if (!authStore.auth?.email) {
-                throw new Error("Usuário não autenticado");
-            }
-
-            const response = await this.request.get(`/ongs/${authStore.auth.email}`);
+            const response = await this.request.get(`/ongs/${email}`);
             return response.data;
         } catch (error) {
             return {
@@ -69,18 +65,21 @@ export default class OngsService extends BaseAPI {
                 key: 'ong_nome',
                 sortable: false,
                 title: 'Nome',
+                type: 'text',
             },
             {
                 align: 'start',
                 key: 'ong_razao_social',
                 sortable: false,
                 title: 'Razão Social',
+                type: 'text',
             },
             {
                 align: 'start',
                 key: 'action',
                 sortable: false,
                 title: 'Ações',
+                type: 'custom',
             }
         ]
     }

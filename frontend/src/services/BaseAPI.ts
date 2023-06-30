@@ -2,6 +2,7 @@ import type { AxiosInstance } from 'axios';
 import HttpRequests from '../http/HttpRequests';
 
 import { useAuthStore } from '../modules/auth/stores/authStore'
+import type { TableHeader } from '../types';
 
 interface BaseApiUrl {
     baseURL: string;
@@ -47,6 +48,16 @@ export default abstract class BaseAPI {
 
     }
 
+    protected getAuthEmail() {
+        const authStore = useAuthStore();
+        if (!authStore.auth?.email) {
+            throw new Error("Usuário não autenticado");
+        }
+        return authStore.auth.email;
+    }
+
     protected abstract config(): BaseApiUrl;
+
+    public abstract getHeaders(): TableHeader[];
 
 }

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { ref, onMounted  } from 'vue';
+import { ref  } from 'vue';
 import type { Ref } from 'vue';
-import OngsService from '../services/OngsService';
+import ItensDoadosService from '../services/ItensDoadosService';
 import { useAuthStore } from "../modules/auth/stores/authStore";
 import useToast from '../composables/toast';
 import DataGrid from '../components/DataGrid/DataGrid.vue';
@@ -16,7 +16,7 @@ const date = ref(null);
 const authStore = useAuthStore();
 const toast = useToast();
 
-const ongsService = new OngsService();
+const itensDoadosService = new ItensDoadosService();
 
 const form: Ref<FormData> = ref<FormData>({
   nome: '',
@@ -24,7 +24,7 @@ const form: Ref<FormData> = ref<FormData>({
 });
 const dialog = ref(false);
 const isEditing = ref(false);
-const dataGridRef = ref<DataGrid>();
+const dataGridRef = ref();
 
 const openModalCreate = () => {
   isEditing.value = false;
@@ -45,25 +45,25 @@ const createOng = async () => {
     return;
   }
 
-  const response = await ongsService.createOng({ ong_nome: form.value.nome, ong_razao_social: form.value.razaoSocial, adm_id: authStore.auth.id });
+  // const response = await ongsService.createOng({ ong_nome: form.value.nome, ong_razao_social: form.value.razaoSocial, adm_id: authStore.auth.id });
   
-  if (!response.success || !response?.data?.ong_id) {
-    toast.toastError('Erro ao criar ONG');
-    return;
-  }
+  // if (!response.success || !response?.data?.ong_id) {
+  //   toast.toastError('Erro ao criar ONG');
+  //   return;
+  // }
 
-  toast.toastSuccess('ONG criada com sucesso');
+  // toast.toastSuccess('ONG criada com sucesso');
 
-  dialog.value = false;
+  // dialog.value = false;
 
-  dataGridRef.value?.refresh();
+  // dataGridRef.value?.refresh();
 };
 
 </script>
 
 
 <template>
-  <DataGrid ref="dataGridRef" title="Item Doado" :api="new OngsService()" :loadHeaders="ongsService.getHeaders" :loadItems="ongsService.getOngsByAdmin">
+  <DataGrid ref="dataGridRef" title="Item Doado" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
     <template #inBatchActions>
       <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text" @click="openModalCreate">
           Cadastrar Item para Doação
