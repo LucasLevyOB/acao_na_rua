@@ -1,20 +1,24 @@
 <script lang="ts" setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref } from 'vue';
 
- const loading = ref(false);
+import { useRouter } from 'vue-router';
 
-  watch(loading, (val) => {
-    if (!val) return;
+const router = useRouter();
 
-    setTimeout(() => {
-      loading.value = false;
-    }, 2000);
-  });
+const loginLoading = ref(false);
+const loginVisitante = ref(false);
 
-  // Função para simular o comportamento de inicialização
-  onMounted(() => {
-    loading.value = true;
-  });
+const goToLogin = () => {
+  loginLoading.value = true;
+  router.push('/login');
+  loginLoading.value = false;
+};
+
+const goToVisitante = () => {
+  loginVisitante.value = true;
+  router.push('/visitante');
+  loginVisitante.value = false;
+};
 
 </script>
 
@@ -26,28 +30,28 @@ import { ref, watch, onMounted } from 'vue';
       <div class="btn_buttons">
         <div class="btn_logar">
           <v-btn
-          :disabled="loading"
-          :loading="loading"
+          :disabled="loginLoading"
+          :loading="loginLoading"
           block
           class="text-none mb-4 text_btn"
           color="#8A2DD6"
           size="x-large"
           variant="flat"
-          @click="loading = !loading"
+          @click="goToLogin"
         >
           Entrar
         </v-btn>
         </div>
         <div class="btn_visitante">
           <v-btn
-          :disabled="loading"
-          :loading="loading"
+          :disabled="loginVisitante"
+          :loading="loginVisitante"
           block
           class="text-none mb-4 text_btn"
           color="#8A2DD6"
           size="x-large"
           variant="flat"
-          @click="loading = !loading"
+          @click="goToVisitante"
         >
           Visitante
         </v-btn>

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import type { Ref } from 'vue';
+import { RouterLink } from 'vue-router';
+
 import useAuthService from '../modules/auth/composables/authService';
 
 type LoginType = 'voluntario' | 'admin';
@@ -109,7 +111,7 @@ const required = (v:String) => {
         >
           Entrar
         </v-btn>
-        <p>Ainda não tem uma conta?<a href="">Cadastre-se</a></p>
+        <p v-show="loginType === 'admin'">Ainda não tem uma conta?<router-link :to="{ name: 'Cadastrar' }">Cadastre-se</router-link></p>
         </div>
       </div>
     </div>
