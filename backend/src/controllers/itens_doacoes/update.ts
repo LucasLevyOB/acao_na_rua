@@ -2,7 +2,6 @@ import type { NextFunction, Request, Response } from "express";
 import connection from "../../database/connection";
 
 import BaseApiResponse from "../../classes/BaseApiResponse";
-import ItemDoacao from "../../models/ItemDoacao";
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
     try {

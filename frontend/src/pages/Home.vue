@@ -2,61 +2,69 @@
 import { ref  } from 'vue';
 import type { Ref } from 'vue';
 import ItensDoadosService from '../services/ItensDoadosService';
-import { useAuthStore } from "../modules/auth/stores/authStore";
 import useToast from '../composables/toast';
 import DataGrid from '../components/DataGrid/DataGrid.vue';
+import ItemDoacao from '../models/ItemDoacao';
+import useDayjs from '../composables/dayjs';
 
 type FormData = {
-  nome: string;
-  razaoSocial: string;
+  id: number;
+  itd_nome: string;
+  itd_quantidade: number;
+  itd_categoria: string;
+  itd_validade: string | null;
 };
 
-const date = ref(null);
-
-const authStore = useAuthStore();
 const toast = useToast();
+const dayjs = useDayjs();
 
 const itensDoadosService = new ItensDoadosService();
 
 const form: Ref<FormData> = ref<FormData>({
-  nome: '',
-  razaoSocial: '',
+  id: 0,
+  itd_nome: '',
+  itd_quantidade: 0,
+  itd_categoria: '',
+  itd_validade: null,
 });
 const dialog = ref(false);
-const isEditing = ref(false);
 const dataGridRef = ref();
+const btnEditIsLoading = ref(false);
 
-const openModalCreate = () => {
-  isEditing.value = false;
-  form.value.nome = '';
-  form.value.razaoSocial = '';
+const openModalEdit = (item: ItemDoacao) => {
   dialog.value = true;
+  if (!item.itd_id) return;
+  form.value = {
+    id: item.itd_id,
+    itd_nome: item.itd_nome,
+    itd_quantidade: item.itd_quantidade,
+    itd_categoria: item.itd_categoria,
+    itd_validade: dayjs(item.itd_validade).format('YYYY-MM-DD'),
+  };
 };
 
-const openModalEdit = () => {
-  isEditing.value = true;
-  form.value.nome = '';
-  form.value.razaoSocial = '';
-  dialog.value = true;
-};
+const editItemDoacao = async () => {
+  btnEditIsLoading.value = true;
+  const { id, itd_categoria, itd_nome, itd_quantidade, itd_validade } = form.value;
 
-const createOng = async () => {
-  if (!form.value.nome || !form.value.razaoSocial || !authStore.auth.id || !authStore.auth?.email) {
+  if (!id || !itd_categoria || !itd_nome || !itd_quantidade || !itd_validade) {
+    toast.toastError('Preencha todos os campos obrigatórios');
+    btnEditIsLoading.value = false;
     return;
   }
 
-  // const response = await ongsService.createOng({ ong_nome: form.value.nome, ong_razao_social: form.value.razaoSocial, adm_id: authStore.auth.id });
-  
-  // if (!response.success || !response?.data?.ong_id) {
-  //   toast.toastError('Erro ao criar ONG');
-  //   return;
-  // }
+  const response = await itensDoadosService.editItemDoacao(id, { itd_categoria, itd_nome, itd_quantidade, itd_validade });
 
-  // toast.toastSuccess('ONG criada com sucesso');
+  btnEditIsLoading.value = false;
 
-  // dialog.value = false;
+  if (!response.success) {
+    toast.toastError(response.message ? response.message : 'Erro ao editar item para doação');
+    return;
+  }
 
-  // dataGridRef.value?.refresh();
+  toast.toastSuccess('Item para doação editado com sucesso');
+  dialog.value = false;
+  dataGridRef.value?.refresh();
 };
 
 </script>
@@ -64,13 +72,8 @@ const createOng = async () => {
 
 <template>
   <DataGrid ref="dataGridRef" title="Item Doado" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
-    <template #inBatchActions>
-      <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text" @click="openModalCreate">
-          Cadastrar Item para Doação
-      </v-btn>
-    </template>
     <template #inlineActions="{item}">
-        <v-btn icon="mdi-pencil-outline" color="#98A9BC" variant="text" @click="openModalEdit"></v-btn>
+        <v-btn icon="mdi-pencil-outline" color="#98A9BC" variant="text" @click="openModalEdit(item.columns as ItemDoacao)"></v-btn>
         <v-btn icon="mdi-delete-outline" color="#98A9BC" variant="text"></v-btn>
     </template>
   </DataGrid>
@@ -82,22 +85,32 @@ const createOng = async () => {
     >
       <v-card>
         <v-card-title>
-          <span class="text-h5">{{ isEditing ? 'Editar' : 'Cadastrar' }} Item para Doação</span>
+          <span class="text-h5">Editar Item para Doação</span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                  v-model="form.nome"
+                  v-model="form.itd_nome"
                   label="Nome do Produto*"
                   required
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field
-                  v-model="form.razaoSocial"
+                  v-model="form.itd_quantidade"
                   label="Quantidade*"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col
+              cols="12"
+              sm="6"
+              >
+                <v-text-field
+                  v-model="form.itd_categoria"
+                  label="Categoria*"
                   required
                 ></v-text-field>
               </v-col>
@@ -105,17 +118,7 @@ const createOng = async () => {
                 cols="12"
                 sm="6"
               >
-                <v-select
-                  :items="['0-17', '18-29', '30-54', '54+']"
-                  label="Categoria*"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-text-field v-model="date" type="date" />
+                <v-text-field v-model="form.itd_validade" type="date" />
               </v-col>
             </v-row>
           </v-container>
@@ -133,9 +136,10 @@ const createOng = async () => {
           <v-btn
             color="primary"
             variant="flat"
-            @click="createOng"
+            :loading="btnEditIsLoading"
+            @click="editItemDoacao"
           >
-            {{ isEditing ? 'Editar' : 'Criar' }}
+            Editar
           </v-btn>
         </v-card-actions>
       </v-card>

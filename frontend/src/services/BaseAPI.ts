@@ -14,12 +14,14 @@ export interface BaseApiConfig extends BaseApiUrl {
 
 export default abstract class BaseAPI {
     protected request: AxiosInstance;
+    protected email: string;
 
     constructor() {
         this.request = HttpRequests.axiosRegister({
             baseURL: '',
             headers: {},
         });
+        this.email = this.getAuthEmail();
         this.createRequest();
     }
 
@@ -48,7 +50,7 @@ export default abstract class BaseAPI {
 
     }
 
-    protected getAuthEmail() {
+    private getAuthEmail() {
         const authStore = useAuthStore();
         if (!authStore.auth?.email) {
             throw new Error("Usuário não autenticado");

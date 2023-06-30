@@ -4,7 +4,7 @@ export default class ItemDoacao {
     itd_nome: string;
     itd_quantidade: number;
     itd_categoria: string;
-    itd_validade: Date;
+    itd_validade: string;
 
     constructor({ itd_id = null, id_doacao, itd_nome, itd_quantidade, itd_categoria, itd_validade }: ItemDoacao) {
         this.itd_id = itd_id;

@@ -92,10 +92,20 @@ defineExpose({
             :items="items"
             :search="search"
             >
+                <template v-slot:headers>
+                    <tr>
+                        <template v-for="column in headers" :key="column.key">
+                            <th v-if="column.show">
+                                {{ column.title }}
+                            </th>
+                        </template>
+                    </tr>
+                </template>
                 <template v-slot:item="{ item }">
                     <tr>
-                        <template v-for="column in headers">
-                            <td v-if="column.type !== 'custom'">
+                        <template v-for="column in headers" :key="column.key">
+                            <template v-if="!column.show"></template>
+                            <td v-else-if="column.type !== 'custom'">
                                 {{ formatValue(item.columns[column.key], column) }}
                             </td>
                             <td v-else>
