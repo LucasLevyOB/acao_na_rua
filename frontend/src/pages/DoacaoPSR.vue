@@ -29,9 +29,9 @@ const form: Ref<FormData> = ref<FormData>({
 });
 const dialog = ref(false);
 const isEditMode = ref(false);
+const isEditing = ref(false);
 const dataGridRef = ref();
 const btnEditIsLoading = ref(false);
-const isEditing = ref(false);
 
 const openModalCreate = (item: ItemDoacao) => {
   isEditing.value = false;
@@ -97,10 +97,10 @@ const editItemDoacao = async () => {
 
 
 <template>
-  <DataGrid ref="dataGridRef" title="Doaçaõ para ONG" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
+  <DataGrid ref="dataGridRef" title="Doaçaõ para Pessoa em Situação de Rua" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
     <template #inBatchActions>
       <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text" @click="openModalCreate">
-          Cadastrar Doação para ONG
+          Cadastrar Doação para Pessoa em Situação de Rua
       </v-btn>
     </template>
     <template #inlineActions="{item}">
@@ -116,68 +116,52 @@ const editItemDoacao = async () => {
     >
       <v-card>
         <v-card-title>
-          <span class="text-h5">Cadastrar Doação para ONG</span>
+          <span class="text-h5">{{ isEditing ? 'Editar' : 'Criar' }} Doação para Pessoa em Situação de Rua</span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-text-field
+                <!-- Adicionar nas opções as ONGs cadastradas no banco -->
+                <v-select
+                  :items="['Foo', 'Bar']"
                   v-model="form.itd_nome"
-                  label="Nome do Item*"
+                  label="ONG*"
                   required
                   :disabled="isEditMode"
-                ></v-text-field>
+                ></v-select>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.itd_quantidade"
-                  label="Quantidade*"
-                  type="number"
+                <v-select
+                  :items="['Foo', 'Bar']"
+                  v-model="form.doa_nome"
+                  label="Nome da Pessoa em Situação de Rua*"
                   required
                   :disabled="isEditMode"
-                ></v-text-field>
+                ></v-select>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-text-field
+                <v-select
+                  :items="['Foo', 'Bar']"
                   v-model="form.itd_categoria"
-                  label="Categoria*"
-                  type="number"
+                  label="Item*"
                   required
                   :disabled="isEditMode"
+                ></v-select>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  v-model="form.doa_nome"
+                  label="Quantidade de itens*"
+                  type="number"
+                  required
                 ></v-text-field>
               </v-col>
               <v-col
                 cols="12"
                 sm="6"
               >
-                <v-text-field v-model="form.itd_validade" type="date" label="Validade" :disabled="isEditMode"/>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.doa_nome"
-                  label="Nome do Doador*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.ong_id"
-                  label="ONG*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.doa_cpfcnpj"
-                  label="CPF do Doador*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-              >
-                <v-text-field v-model="form.doa_data" type="date" label="Data da Doação" />
+                <v-text-field v-model="form.itd_validade" type="date" label="Data"/>
               </v-col>
             </v-row>
           </v-container>

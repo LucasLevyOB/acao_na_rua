@@ -28,10 +28,32 @@ const form: Ref<FormData> = ref<FormData>({
   itd_validade: null,
 });
 const dialog = ref(false);
+const isEditMode = ref(false);
 const dataGridRef = ref();
 const btnEditIsLoading = ref(false);
+const isEditing = ref(false);
 
 const openModalCreate = (item: ItemDoacao) => {
+  isEditing.value = false;
+  isEditMode.value = false;
+  dialog.value = true;
+  if (!item.itd_id) return;
+  form.value = {
+    id: item.itd_id,
+    itd_nome: item.itd_nome,
+    itd_quantidade: item.itd_quantidade,
+    itd_categoria: item.itd_categoria,
+    itd_validade: dayjs(item.itd_validade).format('YYYY-MM-DD'),
+    id:item.ong_id,
+    doa_nome:item.doa_nome,
+    doa_cpfcnpj:item.doa_cpfcnpj,
+    doa_data:item.doa_data
+  };
+};
+
+const openModalEdit = (item: ItemDoacao) => {
+  isEditing.value = true;
+  isEditMode.value = true;
   dialog.value = true;
   if (!item.itd_id) return;
   form.value = {
@@ -81,6 +103,10 @@ const editItemDoacao = async () => {
           Cadastrar Doação para ONG
       </v-btn>
     </template>
+    <template #inlineActions="{item}">
+        <v-btn icon="mdi-pencil-outline" color="#98A9BC" variant="text" @click="openModalEdit(item.columns as ItemDoacao)"></v-btn>
+        <v-btn icon="mdi-delete-outline" color="#98A9BC" variant="text"></v-btn>
+    </template>
   </DataGrid>
   <v-row justify="center">
     <v-dialog
@@ -100,6 +126,7 @@ const editItemDoacao = async () => {
                   v-model="form.itd_nome"
                   label="Nome do Item*"
                   required
+                  :disabled="isEditMode"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
@@ -108,6 +135,7 @@ const editItemDoacao = async () => {
                   label="Quantidade*"
                   type="number"
                   required
+                  :disabled="isEditMode"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
@@ -116,13 +144,14 @@ const editItemDoacao = async () => {
                   label="Categoria*"
                   type="number"
                   required
+                  :disabled="isEditMode"
                 ></v-text-field>
               </v-col>
               <v-col
                 cols="12"
                 sm="6"
               >
-                <v-text-field v-model="form.itd_validade" type="date" label="Validade" />
+                <v-text-field v-model="form.itd_validade" type="date" label="Validade" :disabled="isEditMode"/>
               </v-col>
               <v-col cols="12" sm="6">
                 <v-text-field
@@ -169,7 +198,7 @@ const editItemDoacao = async () => {
             :loading="btnEditIsLoading"
             @click="editItemDoacao"
           >
-            Cadastrar
+          {{ isEditing ? 'Editar' : 'Criar' }}
           </v-btn>
         </v-card-actions>
       </v-card>
