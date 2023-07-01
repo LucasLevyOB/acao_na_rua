@@ -31,7 +31,7 @@ const dialog = ref(false);
 const dataGridRef = ref();
 const btnEditIsLoading = ref(false);
 
-const openModalCreate = (item: ItemDoacao) => {
+const openModalEdit = (item: ItemDoacao) => {
   dialog.value = true;
   if (!item.itd_id) return;
   form.value = {
@@ -40,10 +40,6 @@ const openModalCreate = (item: ItemDoacao) => {
     itd_quantidade: item.itd_quantidade,
     itd_categoria: item.itd_categoria,
     itd_validade: dayjs(item.itd_validade).format('YYYY-MM-DD'),
-    id:item.ong_id,
-    doa_nome:item.doa_nome,
-    doa_cpfcnpj:item.doa_cpfcnpj,
-    doa_data:item.doa_data
   };
 };
 
@@ -75,11 +71,10 @@ const editItemDoacao = async () => {
 
 
 <template>
-  <DataGrid ref="dataGridRef" title="Doaçaõ para ONG" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
-    <template #inBatchActions>
-      <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text" @click="openModalCreate">
-          Cadastrar Doação para ONG
-      </v-btn>
+  <DataGrid ref="dataGridRef" title="Item Doado" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
+    <template #inlineActions="{item}">
+        <v-btn icon="mdi-pencil-outline" color="#98A9BC" variant="text" @click="openModalEdit(item.columns as ItemDoacao)"></v-btn>
+        <v-btn icon="mdi-delete-outline" color="#98A9BC" variant="text"></v-btn>
     </template>
   </DataGrid>
   <v-row justify="center">
@@ -90,7 +85,7 @@ const editItemDoacao = async () => {
     >
       <v-card>
         <v-card-title>
-          <span class="text-h5">Cadastrar Doação para ONG</span>
+          <span class="text-h5">Editar Item para Doação</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -98,23 +93,24 @@ const editItemDoacao = async () => {
               <v-col cols="12">
                 <v-text-field
                   v-model="form.itd_nome"
-                  label="Nome do Item*"
+                  label="Nome do Produto*"
                   required
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" sm="6">
+              <v-col cols="12">
                 <v-text-field
                   v-model="form.itd_quantidade"
                   label="Quantidade*"
-                  type="number"
                   required
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" sm="6">
+              <v-col
+              cols="12"
+              sm="6"
+              >
                 <v-text-field
                   v-model="form.itd_categoria"
                   label="Categoria*"
-                  type="number"
                   required
                 ></v-text-field>
               </v-col>
@@ -122,33 +118,7 @@ const editItemDoacao = async () => {
                 cols="12"
                 sm="6"
               >
-                <v-text-field v-model="form.itd_validade" type="date" label="Validade" />
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.doa_nome"
-                  label="Nome do Doador*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.ong_id"
-                  label="ONG*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.doa_cpfcnpj"
-                  label="CPF do Doador*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-              >
-                <v-text-field v-model="form.doa_data" type="date" label="Data da Doação" />
+                <v-text-field v-model="form.itd_validade" type="date" />
               </v-col>
             </v-row>
           </v-container>
@@ -169,7 +139,7 @@ const editItemDoacao = async () => {
             :loading="btnEditIsLoading"
             @click="editItemDoacao"
           >
-            Cadastrar
+            Editar
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -179,6 +149,7 @@ const editItemDoacao = async () => {
 
 <style>
 
+.vs
 body{
   background-color: #F9F8FE;
 }

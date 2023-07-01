@@ -40,10 +40,6 @@ const openModalCreate = (item: ItemDoacao) => {
     itd_quantidade: item.itd_quantidade,
     itd_categoria: item.itd_categoria,
     itd_validade: dayjs(item.itd_validade).format('YYYY-MM-DD'),
-    id:item.ong_id,
-    doa_nome:item.doa_nome,
-    doa_cpfcnpj:item.doa_cpfcnpj,
-    doa_data:item.doa_data
   };
 };
 
@@ -75,10 +71,10 @@ const editItemDoacao = async () => {
 
 
 <template>
-  <DataGrid ref="dataGridRef" title="Doaçaõ para ONG" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
+  <DataGrid ref="dataGridRef" title="Pessaoa em Situação de Rua" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
     <template #inBatchActions>
       <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text" @click="openModalCreate">
-          Cadastrar Doação para ONG
+          Cadastrar Pessoa em Situação de Rua
       </v-btn>
     </template>
   </DataGrid>
@@ -90,7 +86,7 @@ const editItemDoacao = async () => {
     >
       <v-card>
         <v-card-title>
-          <span class="text-h5">Cadastrar Doação para ONG</span>
+          <span class="text-h5">Cadastrar Pessoa em Sitaução de Rua</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -98,57 +94,25 @@ const editItemDoacao = async () => {
               <v-col cols="12">
                 <v-text-field
                   v-model="form.itd_nome"
-                  label="Nome do Item*"
+                  label="Nome da Pessoa em Situação de Rua*"
                   required
                 ></v-text-field>
               </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.itd_quantidade"
-                  label="Quantidade*"
-                  type="number"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.itd_categoria"
-                  label="Categoria*"
-                  type="number"
-                  required
-                ></v-text-field>
+              <v-col
+              cols="12"
+              sm="6"
+              >
+              <v-select
+                :items="['Masculino', 'Feminino', 'Prefiro não informar']"
+                label="Items"
+                solo color="#000"
+              ></v-select>
               </v-col>
               <v-col
                 cols="12"
                 sm="6"
               >
-                <v-text-field v-model="form.itd_validade" type="date" label="Validade" />
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.doa_nome"
-                  label="Nome do Doador*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.ong_id"
-                  label="ONG*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.doa_cpfcnpj"
-                  label="CPF do Doador*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-              >
-                <v-text-field v-model="form.doa_data" type="date" label="Data da Doação" />
+                <v-text-field v-model="form.itd_validade" type="date" />
               </v-col>
             </v-row>
           </v-container>
