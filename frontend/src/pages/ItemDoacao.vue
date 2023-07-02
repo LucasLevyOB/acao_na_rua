@@ -74,7 +74,7 @@ const editItemDoacao = async () => {
   <DataGrid ref="dataGridRef" title="Item Doado" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
     <template #inlineActions="{item}">
         <v-btn icon="mdi-pencil-outline" color="#98A9BC" variant="text" @click="openModalEdit(item.columns as ItemDoacao)"></v-btn>
-        <v-btn icon="mdi-delete-outline" color="#98A9BC" variant="text"></v-btn>
+        <v-btn icon="mdi-delete-outline" color="#98A9BC" variant="text" tooltip="Confirmar Deleção"></v-btn>
     </template>
   </DataGrid>
   <v-row justify="center">

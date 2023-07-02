@@ -26,7 +26,7 @@ routes.get("/ongs/:email", checkLogged, adminPermission, ongs.get);
 
 // rota voluntarios
 routes.post("/voluntarios/:email", checkLogged, adminPermission, voluntarios.create);
-routes.get("/voluntarios/:email/:ong_id", checkLogged, adminPermission, voluntarios.get);
+routes.get("/voluntarios/:email", checkLogged, adminPermission, voluntarios.get);
 
 // rota pessoas_situacao_rua
 routes.get("/pessoas_situacao_rua/:email_cpf", checkLogged, voluntarioPermission, pessoa_situacao_rua.get);

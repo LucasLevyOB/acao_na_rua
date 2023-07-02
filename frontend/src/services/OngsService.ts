@@ -30,7 +30,7 @@ export default class OngsService extends BaseAPI {
 
     public async getOngsByAdmin(): Promise<BaseAPIResponse<Ong[]>> {
         try {
-            const response = await this.request.get(`/ongs/${this.email}`);
+            const response = await this.request.get(`/ongs/${this.emailCpf}`);
             return response.data;
         } catch (error) {
             return {
@@ -42,7 +42,7 @@ export default class OngsService extends BaseAPI {
 
     public async createOng(payload: CreateOngPayload): Promise<BaseAPIResponse<{ ong_id: number }>> {
         try {
-            const response = await this.request.post(`/ongs/${this.email}`, payload);
+            const response = await this.request.post(`/ongs/${this.emailCpf}`, payload);
             return response.data;
         } catch (error) {
             return {

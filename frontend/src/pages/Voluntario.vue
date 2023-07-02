@@ -1,77 +1,84 @@
 <script lang="ts" setup>
 import { ref  } from 'vue';
 import type { Ref } from 'vue';
-import ItensDoadosService from '../services/ItensDoadosService';
+import VoluntariosService from '../services/VoluntariosService';
 import useToast from '../composables/toast';
 import DataGrid from '../components/DataGrid/DataGrid.vue';
-import ItemDoacao from '../models/ItemDoacao';
-import useDayjs from '../composables/dayjs';
+import OngsService from '../services/OngsService';
+import Ong from '../models/Ong';
+import { onMounted } from 'vue';
 
 type FormData = {
-  id: number;
-  itd_nome: string;
-  itd_quantidade: number;
-  itd_categoria: string;
-  itd_validade: string | null;
+  vol_cpf: string,
+  vol_nome: string,
+  vol_senha: string,
+  vol_setor: string,
+  ong_id: string
 };
 
 const toast = useToast();
-const dayjs = useDayjs();
 
-const itensDoadosService = new ItensDoadosService();
+const voluntariosService = new VoluntariosService();
+const ongsService = new OngsService();
 
 const form: Ref<FormData> = ref<FormData>({
-  id: 0,
-  itd_nome: '',
-  itd_quantidade: 0,
-  itd_categoria: '',
-  itd_validade: null,
+  vol_cpf: '',
+  vol_nome: '',
+  vol_senha: '',
+  vol_setor: '',
+  ong_id: ''
 });
+const ongItems: Ref<Ong[]> = ref([]);
 const dialog = ref(false);
 const dataGridRef = ref();
-const btnEditIsLoading = ref(false);
+const btnCreateIsLoading = ref(false);
 
-const openModalCreate = (item: ItemDoacao) => {
+const openModalCreate = () => {
   dialog.value = true;
-  if (!item.itd_id) return;
-  form.value = {
-    id: item.itd_id,
-    itd_nome: item.itd_nome,
-    itd_quantidade: item.itd_quantidade,
-    itd_categoria: item.itd_categoria,
-    itd_validade: dayjs(item.itd_validade).format('YYYY-MM-DD'),
-  };
 };
 
-const editItemDoacao = async () => {
-  btnEditIsLoading.value = true;
-  const { id, itd_categoria, itd_nome, itd_quantidade, itd_validade } = form.value;
+const createVoluntario = async () => {
+  btnCreateIsLoading.value = true;
+  const { ong_id, vol_cpf, vol_nome, vol_senha, vol_setor } = form.value;
 
-  if (!id || !itd_categoria || !itd_nome || !itd_quantidade || !itd_validade) {
+  if (!ong_id || !vol_cpf || !vol_nome || !vol_senha || !vol_setor) {
     toast.toastError('Preencha todos os campos obrigatórios');
-    btnEditIsLoading.value = false;
+    btnCreateIsLoading.value = false;
     return;
   }
 
-  const response = await itensDoadosService.editItemDoacao(id, { itd_categoria, itd_nome, itd_quantidade, itd_validade });
+  const response = await voluntariosService.createVoluntario({ ong_id: parseInt(ong_id), vol_cpf, vol_nome, vol_senha, vol_setor });
 
-  btnEditIsLoading.value = false;
+  btnCreateIsLoading.value = false;
 
   if (!response.success) {
-    toast.toastError(response.message ? response.message : 'Erro ao editar item para doação');
+    toast.toastError(response.message ? response.message : 'Erro ao cadastrar voluntário');
     return;
   }
 
-  toast.toastSuccess('Item para doação editado com sucesso');
+  toast.toastSuccess('Voluntário cadastrado com sucesso');
   dialog.value = false;
   dataGridRef.value?.refresh();
 };
+
+const loadOngs = async () => {
+  const response = await ongsService.getOngs();
+  if (!response.success || !response.data) {
+    toast.toastError(response.message ? response.message : 'Erro ao carregar ONGs');
+    return;
+  }
+  ongItems.value = response.data;
+};
+
+onMounted(async () => {
+  await loadOngs();
+});
 
 </script>
 
 
 <template>
-  <DataGrid ref="dataGridRef" title="Voluntário" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
+  <DataGrid ref="dataGridRef" title="Voluntário" :api="new VoluntariosService()" :loadHeaders="voluntariosService.getHeaders" :loadItems="voluntariosService.getVoluntarios">
     <template #inBatchActions>
       <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text" @click="openModalCreate">
           Cadastrar Voluntário
@@ -93,21 +100,28 @@ const editItemDoacao = async () => {
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                  v-model="form.itd_nome"
+                  v-model="form.vol_nome"
                   label="Nome do Voluntário*"
                   required
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
                 <v-text-field
-                  v-model="form.itd_nome"
+                  v-model="form.vol_cpf"
                   label="CPF*"
                   required
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
                 <v-text-field
-                  v-model="form.itd_nome"
+                  v-model="form.vol_senha"
+                  label="Senha*"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  v-model="form.vol_setor"
                   label="Setor*"
                   required
                 ></v-text-field>
@@ -116,13 +130,13 @@ const editItemDoacao = async () => {
                 cols="12"
                 sm="6"
               >
-                <v-text-field v-model="form.itd_validade" type="date" label="Data de Entrada" />
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-text-field v-model="form.itd_validade" type="date" label="Data de Saída"/>
+              <v-select
+                v-model="form.ong_id"
+                label="Selecionar ONG*"
+                :items="ongItems"
+                item-title="ong_nome"
+                item-value="ong_id"
+              ></v-select>
               </v-col>
             </v-row>
           </v-container>
@@ -140,8 +154,8 @@ const editItemDoacao = async () => {
           <v-btn
             color="primary"
             variant="flat"
-            :loading="btnEditIsLoading"
-            @click="editItemDoacao"
+            :loading="btnCreateIsLoading"
+            @click="createVoluntario"
           >
             Cadastrar
           </v-btn>

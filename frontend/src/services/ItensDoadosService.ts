@@ -19,7 +19,7 @@ export default class ItensDoadosService extends BaseAPI {
 
     public async getItensDoados(): Promise<BaseAPIResponse<ItemDoacao[]>> {
         try {
-            const response = await this.request.get(`/itens_doacoes/${this.email}`);
+            const response = await this.request.get(`/itens_doacoes/${this.emailCpf}`);
             return response.data;
         } catch (error) {
             return {
@@ -31,7 +31,7 @@ export default class ItensDoadosService extends BaseAPI {
 
     public async editItemDoacao(itdId: number, payload: UpdateItemDoacaoPayload): Promise<BaseAPIResponse<{}>> {
         try {
-            const response = await this.request.put(`/itens_doacoes/${this.email}/${itdId}`, payload);
+            const response = await this.request.put(`/itens_doacoes/${this.emailCpf}/${itdId}`, payload);
             return response.data;
         } catch (error) {
             return {

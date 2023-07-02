@@ -1,5 +1,5 @@
 import Voluntario from "../models/Voluntario";
-import { BaseAPIResponse } from "../types";
+import { BaseAPIResponse, TableHeader } from "../types";
 import BaseAPI from "./BaseAPI";
 
 export interface CreateVoluntarioPayload {
@@ -17,9 +17,9 @@ export default class VoluntariosService extends BaseAPI {
         };
     }
 
-    public async getVoluntarios(ongId: number): Promise<BaseAPIResponse<Voluntario[]>> {
+    public async getVoluntarios(): Promise<BaseAPIResponse<Voluntario[]>> {
         try {
-            const response = await this.request.get('/voluntarios', { params: { ong_id: ongId } });
+            const response = await this.request.get(`/voluntarios/${this.emailCpf}`);
             return response.data;
         } catch (error) {
             return {
@@ -31,7 +31,7 @@ export default class VoluntariosService extends BaseAPI {
 
     public async createVoluntario(payload: CreateVoluntarioPayload): Promise<BaseAPIResponse<{ vol_cpf: string }>> {
         try {
-            const response = await this.request.post('/voluntarios', payload);
+            const response = await this.request.post(`/voluntarios/${this.emailCpf}`, payload);
             return response.data;
         } catch (error) {
             return {
@@ -41,5 +41,44 @@ export default class VoluntariosService extends BaseAPI {
         }
     }
 
-
+    public getHeaders(): TableHeader[] {
+        return [
+            {
+                title: 'CPF',
+                key: 'vol_cpf',
+                type: 'text',
+                show: true,
+            },
+            {
+                title: 'Nome',
+                key: 'vol_nome',
+                type: 'text',
+                show: true,
+            },
+            {
+                title: 'Setor',
+                key: 'vol_setor',
+                type: 'text',
+                show: true,
+            },
+            {
+                title: 'Ong',
+                key: 'ong_nome',
+                type: 'text',
+                show: true,
+            },
+            {
+                title: 'Data de entrada',
+                key: 'vol_data_entrada',
+                type: 'date',
+                show: true,
+            },
+            {
+                title: 'Data de saída',
+                key: 'vol_data_saida',
+                type: 'date',
+                show: true,
+            },
+        ]
+    }
 }

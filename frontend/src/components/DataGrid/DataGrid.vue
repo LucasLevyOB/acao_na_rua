@@ -43,7 +43,8 @@ const loadItems = async () => {
 };
 
 const formatValue = (value: string | number, column: TableHeader) => {
-    if (column.type === 'datetime') {
+    if (value === null || value === undefined) return '';
+    if (column.type === 'date') {
         return dayjs(value).format('DD/MM/YYYY');
     }
     return value;
