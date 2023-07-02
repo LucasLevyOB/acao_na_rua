@@ -43,10 +43,11 @@ const goTo = (route: string) => {
         <v-list density="compact" nav>
             <v-list-item prepend-icon="mdi-view-dashboard" title="Dashboard" value="dashboard" @click="goTo('/')"></v-list-item>
             <v-list-item v-if="authStore.isLogged && authStore.isAdmin" prepend-icon="mdi-charity" title="ONG" value="ong" @click="goTo('/ongs')"></v-list-item>
+            <v-list-item v-if="authStore.isLogged" prepend-icon="mdi-account-plus"  title="Cadastrar Pessoa" value="cadastrar pessoa" @click="goTo('/pessoa-situacao-rua')"></v-list-item>
             <v-list-item v-if="authStore.isLogged" prepend-icon="mdi-account-heart"  title="Ajuda Pessoa" value="ajuda pessoa" @click="goTo('/doacao-psr')"></v-list-item>
             <v-list-item v-if="authStore.isLogged && authStore.isAdmin" prepend-icon="mdi-account-supervisor" title="Voluntário" value="voluntário" @click="goTo('/voluntarios')"></v-list-item>
             <v-list-item v-if="authStore.isLogged" prepend-icon="mdi-archive" title="Item Doação" value="item doação" @click="goTo('/item-doacao')"></v-list-item>
-            <v-list-item v-if="authStore.isLogged" prepend-icon="mdi-hand-coin" color="#fff" title="Doação" value="doação" @click="goTo('/doacao-ong')"></v-list-item>
+            <v-list-item v-if="authStore.isLogged" prepend-icon="mdi-hand-coin" color="#fff" title="Doação Para ONGs" value="doação" @click="goTo('/doacao-ong')"></v-list-item>
             <v-list-item prepend-icon="mdi-help-circle" color="#fff" title="Sobre" value="sobre" @click="goTo('/sobre')"></v-list-item>
             <v-list-item v-if="authStore.isLogged" prepend-icon="mdi-logout" color="#fff" title="Sair" value="sair" @click="authLogout"></v-list-item>
         </v-list>

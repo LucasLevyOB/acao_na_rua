@@ -120,6 +120,7 @@ const required = (v:String) => {
 
 <style>
 .ilustration{
+  margin-right: 100px;
   width: 507.99px;
   height: 507.43px;
   background: url("../img/Illustration.png");
@@ -144,7 +145,8 @@ const required = (v:String) => {
   
 }
 
-.tabs_texts{
+.tabs_texts .v-btn__content{
+  color: black !important;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 600;
@@ -180,6 +182,10 @@ const required = (v:String) => {
   align-items: center;
   width: 100%;
   margin-top: 50px;
+}
+
+.btn_logar .v-btn__content{
+  color: #FFFFFF;
 }
 
 .content .btn_logar{

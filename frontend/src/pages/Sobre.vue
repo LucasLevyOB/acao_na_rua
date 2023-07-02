@@ -50,30 +50,6 @@ export default {
 
 
 <template>
-  <div class="menu">
-    <div class="logo">
-      <img src="../img/logo_1.png" alt="Logo" />
-    </div>
-    <div class="pesquisa_geral">
-      <v-text-field
-        class="pesquisa_esp"
-        :loading="loading"
-        density="compact"
-        variant="solo"
-        label="Pesquisar"
-        append-inner-icon="mdi-magnify"
-        single-line
-        hide-details
-        @click:append-inner="onClick"
-      ></v-text-field>
-    </div>
-    <div class="user-profile">
-      <v-avatar color="#FFFFFF">
-      <v-icon icon="mdi-account-circle"></v-icon>
-      </v-avatar>
-      <span>{{ nome }}</span>
-    </div>
-  </div>
   <div>  
     <v-layout>
       <v-navigation-drawer

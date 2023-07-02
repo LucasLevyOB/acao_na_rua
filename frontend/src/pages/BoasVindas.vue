@@ -121,7 +121,7 @@ const goToVisitante = () => {
 
 
 .content h1 {
-
+    margin-right: 170px;
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 500;
