@@ -73,11 +73,11 @@ Matrícula, nome e curso dos participantes.
 
 **Frontend:**
 
-Vuetify, Material Design, Font Awesome, Pina, VueApexCharts.
+Vue, TypeScript, Vuetify, Material Design, Font Awesome, Pina, VueApexCharts.
 
 **Backend:**
 
-Lista as tecnologias, frameworks e bibliotecas utilizados.
+Knex, Expresso, Jsonwebtoken, Cors, Sqlite.
 
 
 ## :shipit: Operações implementadas para cada entidade da aplicação
@@ -97,5 +97,22 @@ Lista as tecnologias, frameworks e bibliotecas utilizados.
 
 | Método HTTP | URL |
 | --- | --- |
-| GET | api/entidade1/|
-| POST | api/entidade2 |
+| POST | /auth/login|
+| GET | /auth/token |
+| POST | /administradores |
+| GET | /ongs |
+| POST | /ongs/:email |
+| GET | /ongs/:email |
+| POST | /voluntarios/:email |
+| GET | /voluntarios/:email |
+| POST | /pessoas_situacao_rua/:email_cpf |
+| GET | /pessoas_situacao_rua/:email_cpf |
+| POST | /doacoes/:email_cpf |
+| GET | /doacoes/:email_cpf |
+| GET | /itens_doacoes/:email_cpf |
+| DELETE | /itens_doacoes/:email_cpf/:itd_id |
+| PUT | /itens_doacoes/:email_cpf/:itd_id |
+| GET | /ajudas/:email_cpf |
+| POST | /ajudas/:email_cpf |
+| DELETE | /ajudas/:email_cpf/:ajd_id |
+| PUT | /ajudas/:email_cpf/:ajd_id |
