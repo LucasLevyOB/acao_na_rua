@@ -125,7 +125,7 @@ const editItemDoacao = async () => {
                 <!-- Adicionar nas opções as ONGs cadastradas no banco -->
                 <v-select
                   :items="['Foo', 'Bar']"
-                  v-model="form.itd_nome"
+                  v-model="form.ong_id"
                   label="ONG*"
                   required
                   :disabled="isEditMode"

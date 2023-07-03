@@ -23,13 +23,10 @@ Matrícula, nome e curso dos participantes.
 - Voluntário: Entidade que representa um voluntário.
 - Doação: Entidade que representa uma doação.
 - Pessoa em situação de rua: Entidade que representa uma pessoa em situação de rua.
-- Doador: Entidade que representa um doador.
 - Item: Entidade que representa um item.
 - Ajuda: Entidade que representa uma ajuda.
 
 ## :triangular_flag_on_post:	 Principais funcionalidades da aplicação
-
-Descreve ou liste brevemente as principais funcionalidades da aplicação que será desenvolvida. Destaque a funcionalidades que serão acessévies a todos os usuários e aquelas restriras a usuários logados.
 
 #### :lock: Funcionalidades restritas a usuários não logados
 - Login: Os voluntários e administradores poderão fazer login no sistema.
@@ -39,7 +36,6 @@ Descreve ou liste brevemente as principais funcionalidades da aplicação que se
 #### :lock: Funcionalidades restritas a usuários logados
 - Logout: Os voluntários e administradores poderão fazer logout do sistema.
 - Monitoramento de doações: Administradores poderão monitorar as doações cadastradas no sistema, através de gráficos e etc.
-- Exportação de dados: Administradores poderão exportar os dados cadastrados no sistema.
 - Cadastro de ONG: Administradores poderão cadastrar ONGs no sistema.
 - Cadastro de Voluntário: Administradores poderão cadastrar voluntários no sistema.
 - Listagem de Voluntário: Administradores poderão listar seus voluntários cadastrados no sistema.
@@ -77,11 +73,11 @@ Descreve ou liste brevemente as principais funcionalidades da aplicação que se
 
 **Frontend:**
 
-Lista as tecnologias, frameworks e bibliotecas utilizados.
+Vue, TypeScript, Vuetify, Material Design, Font Awesome, Pina, VueApexCharts.
 
 **Backend:**
 
-Lista as tecnologias, frameworks e bibliotecas utilizados.
+Knex, Expresso, Jsonwebtoken, Cors, Sqlite.
 
 
 ## :shipit: Operações implementadas para cada entidade da aplicação
@@ -89,15 +85,34 @@ Lista as tecnologias, frameworks e bibliotecas utilizados.
 
 | Entidade| Criação | Leitura | Atualização | Remoção |
 | --- | --- | --- | --- | --- |
-| Entidade 1 | X |  X  |  | X |
-| Entidade 2 | X |    |  X | X |
-| Entidade 3 | X |    |  |  |
-
-> Lembre-se que é necessário implementar o CRUD de pelo menos duas entidades.
+| ONG | X |  X  |  |  |
+| Administrador | X |    |   |  |
+| Voluntário | X |  X  |  |  |
+| Doação | X |  X  | X | X |
+| Pessoa em Situação de Rua | X | X |   |  |
+| Item |  |  X  | X | X |
+| Ajuda | X |  X  |  X | X |
 
 ## :neckbeard: Rotas da API REST utilizadas
 
 | Método HTTP | URL |
 | --- | --- |
-| GET | api/entidade1/|
-| POST | api/entidade2 |
+| POST | /auth/login|
+| GET | /auth/token |
+| POST | /administradores |
+| GET | /ongs |
+| POST | /ongs/:email |
+| GET | /ongs/:email |
+| POST | /voluntarios/:email |
+| GET | /voluntarios/:email |
+| POST | /pessoas_situacao_rua/:email_cpf |
+| GET | /pessoas_situacao_rua/:email_cpf |
+| POST | /doacoes/:email_cpf |
+| GET | /doacoes/:email_cpf |
+| GET | /itens_doacoes/:email_cpf |
+| DELETE | /itens_doacoes/:email_cpf/:itd_id |
+| PUT | /itens_doacoes/:email_cpf/:itd_id |
+| GET | /ajudas/:email_cpf |
+| POST | /ajudas/:email_cpf |
+| DELETE | /ajudas/:email_cpf/:ajd_id |
+| PUT | /ajudas/:email_cpf/:ajd_id |

@@ -143,6 +143,10 @@ const createPSR = async () => {
 
 <style>
 
+.v-list .v-list-item--active .v-list-item-title{
+  color: #000 !important;
+}
+
 body{
   background-color: #F9F8FE;
 }
