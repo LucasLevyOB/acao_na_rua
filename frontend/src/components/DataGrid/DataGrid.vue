@@ -23,6 +23,7 @@ const search = ref('');
 const toast = useToast();
 const isLoading = ref(false);
 const dayjs = useDayjs();
+const datagridRef = ref();
 
 
 const loadHeaders = async () => {
@@ -54,6 +55,28 @@ const refresh = async () => {
     await loadItems();
 };
 
+const formatCsv = () => {
+  const csvHeaders = headers.value.map(header => header.title);
+  const itemsCsv = items.value.map((value: T) => headers.value.map(header => value[header.key as keyof T]));
+  const csvString = [csvHeaders, ...itemsCsv].map(e => e.join(",")).join("\n");
+  return csvString;
+}
+
+const downloadCsv = (dataContent: string) => {
+  const blob = new Blob([dataContent], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob)
+  const a = document.createElement('a');
+  a.setAttribute('href', url);
+  a.setAttribute('exportar_dados', 'exportar_dados.csv');
+  a.click();
+}
+
+const exportData = () => {
+  const csvContent = formatCsv();
+  console.log(csvContent)
+  downloadCsv(csvContent);
+}
+
 onMounted(async () => {
     isLoading.value = true;
     await loadHeaders();
@@ -75,7 +98,7 @@ defineExpose({
                 <v-spacer></v-spacer>
                 <div class="btn-cad-exp">
                     <slot name="inBatchActions"></slot>
-                    <v-btn height="48" append-icon="mdi-download-outline" variant="text">
+                    <v-btn height="48" append-icon="mdi-download-outline" variant="text" @click="exportData">
                         Exportar
                     </v-btn>
                 </div>
@@ -89,6 +112,7 @@ defineExpose({
                 ></v-text-field>
             </v-card-title>
             <v-data-table
+            ref="datagridRef"
             :headers="headers"
             :items="items"
             :search="search"

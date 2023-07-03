@@ -81,14 +81,6 @@ export default class OngsService extends BaseAPI {
                 title: 'Razão Social',
                 type: 'text',
                 show: true,
-            },
-            {
-                align: 'start',
-                key: 'action',
-                sortable: false,
-                title: 'Ações',
-                type: 'custom',
-                show: true,
             }
         ]
     }
