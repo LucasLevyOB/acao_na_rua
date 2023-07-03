@@ -1,283 +1,129 @@
 <script lang="ts" setup>
-import { ref  } from 'vue';
+import { ref, onMounted } from 'vue';
 import type { Ref } from 'vue';
-import ItensDoadosService from '../services/ItensDoadosService';
+import OngsService from '../services/OngsService';
+import type Ong from '../models/Ong';
 import useToast from '../composables/toast';
-import DataGrid from '../components/DataGrid/DataGrid.vue';
+import ItensDoadosService from '../services/ItensDoadosService';
 import ItemDoacao from '../models/ItemDoacao';
-import useDayjs from '../composables/dayjs';
 
-type FormData = {
-  id: number;
-  itd_nome: string;
-  itd_quantidade: number;
-  itd_categoria: string;
-  itd_validade: string | null;
-};
 
-const toast = useToast();
-const dayjs = useDayjs();
-
+const ongsService = new OngsService();
 const itensDoadosService = new ItensDoadosService();
+const toast = useToast();
 
-const form: Ref<FormData> = ref<FormData>({
-  id: 0,
-  itd_nome: '',
-  itd_quantidade: 0,
-  itd_categoria: '',
-  itd_validade: null,
+const ongs: Ref<Ong[]> = ref([]);
+const itens: Ref<ItemDoacao[]> = ref([]);
+const dataLoaded = ref(false);
+
+const loadOngs = async () => {
+  const response = await ongsService.getOngs();
+
+  if (!response.success || !response.data) {
+    toast.toastError('Erro ao carregar ONGs');
+    return;
+  }
+
+  ongs.value = response.data;
+};
+
+const loadItens = async () => {
+  const response = await itensDoadosService.getItensDoados();
+
+  if (!response.success || !response.data) {
+    toast.toastError('Erro ao carregar Itens');
+    return;
+  }
+
+  itens.value = response.data;
+  dataLoaded.value = true;
+};
+
+onMounted(async () => {
+  await loadOngs();
+  await loadItens();
 });
-const dialog = ref(false);
-const isEditMode = ref(false);
-const dataGridRef = ref();
-const btnEditIsLoading = ref(false);
-const isEditing = ref(false);
 
-const openModalCreate = (item: ItemDoacao) => {
-  isEditing.value = false;
-  isEditMode.value = false;
-  dialog.value = true;
-  if (!item.itd_id) return;
-  form.value = {
-    id: item.itd_id,
-    itd_nome: item.itd_nome,
-    itd_quantidade: item.itd_quantidade,
-    itd_categoria: item.itd_categoria,
-    itd_validade: dayjs(item.itd_validade).format('YYYY-MM-DD'),
-    id:item.ong_id,
-    doa_nome:item.doa_nome,
-    doa_cpfcnpj:item.doa_cpfcnpj,
-    doa_data:item.doa_data
-  };
-};
+const chartOptions  = {
+      chart: {
+        id: 'food-chart'
+      },
+      xaxis: {
+        categories: itens.value.map(item => item.itd_nome)
+      }
+    };
 
-const openModalEdit = (item: ItemDoacao) => {
-  isEditing.value = true;
-  isEditMode.value = true;
-  dialog.value = true;
-  if (!item.itd_id) return;
-  form.value = {
-    id: item.itd_id,
-    itd_nome: item.itd_nome,
-    itd_quantidade: item.itd_quantidade,
-    itd_categoria: item.itd_categoria,
-    itd_validade: dayjs(item.itd_validade).format('YYYY-MM-DD'),
-    id:item.ong_id,
-    doa_nome:item.doa_nome,
-    doa_cpfcnpj:item.doa_cpfcnpj,
-    doa_data:item.doa_data
-  };
-};
-
-const editItemDoacao = async () => {
-  btnEditIsLoading.value = true;
-  const { id, itd_categoria, itd_nome, itd_quantidade, itd_validade } = form.value;
-
-  if (!id || !itd_categoria || !itd_nome || !itd_quantidade || !itd_validade) {
-    toast.toastError('Preencha todos os campos obrigatórios');
-    btnEditIsLoading.value = false;
-    return;
-  }
-
-  const response = await itensDoadosService.editItemDoacao(id, { itd_categoria, itd_nome, itd_quantidade, itd_validade });
-
-  btnEditIsLoading.value = false;
-
-  if (!response.success) {
-    toast.toastError(response.message ? response.message : 'Erro ao editar item para doação');
-    return;
-  }
-
-  toast.toastSuccess('Item para doação editado com sucesso');
-  dialog.value = false;
-  dataGridRef.value?.refresh();
-};
+    const chartData  = ref([
+      {
+        name: 'Quantidade',
+        data: itens.value.map(item => item.itd_quantidade)
+      }
+    ]);
 
 </script>
 
-
 <template>
-  <DataGrid ref="dataGridRef" title="Doaçaõ para ONG" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
-    <template #inBatchActions>
-      <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text" @click="openModalCreate">
-          Cadastrar Doação para ONG
-      </v-btn>
-    </template>
-    <template #inlineActions="{item}">
-        <v-btn icon="mdi-pencil-outline" color="#98A9BC" variant="text" @click="openModalEdit(item.columns as ItemDoacao)"></v-btn>
-        <v-btn icon="mdi-delete-outline" color="#98A9BC" variant="text"></v-btn>
-    </template>
-  </DataGrid>
-  <v-row justify="center">
-    <v-dialog
-      v-model="dialog"
-      persistent
-      width="1024"
-    >
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">Cadastrar Doação para ONG</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="form.itd_nome"
-                  label="Nome do Item*"
-                  required
-                  :disabled="isEditMode"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.itd_quantidade"
-                  label="Quantidade*"
-                  type="number"
-                  required
-                  :disabled="isEditMode"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.itd_categoria"
-                  label="Categoria*"
-                  type="number"
-                  required
-                  :disabled="isEditMode"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-text-field v-model="form.itd_validade" type="date" label="Validade" :disabled="isEditMode"/>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.doa_nome"
-                  label="Nome do Doador*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.ong_id"
-                  label="ONG*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="form.doa_cpfcnpj"
-                  label="CPF do Doador*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-              >
-                <v-text-field v-model="form.doa_data" type="date" label="Data da Doação" />
-              </v-col>
-            </v-row>
-          </v-container>
-          <small>*Indicadores de campos obrigatórios</small>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            variant="outlined"
-            @click="dialog = false"
-          >
-            Fechar
-          </v-btn>
-          <v-btn
-            color="primary"
-            variant="flat"
-            :loading="btnEditIsLoading"
-            @click="editItemDoacao"
-          >
-          {{ isEditing ? 'Editar' : 'Criar' }}
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-row>
+  <h2 class="page-title">Dashboard</h2>
+  <h4 class="page-subtitle">ONGs</h4>
+  <v-card class="mx-auto card-ong">
+    <v-list lines="two">
+      <v-list-item class="texto-lista-itens" v-for="ong in ongs" :key="ong.ong_id">
+        <template v-slot:default>
+          <v-avatar color="#8A2DD6">
+            <v-icon color="white">mdi-charity</v-icon>
+          </v-avatar>
+          <div>
+            <v-list-item-title class="file-title">{{ ong.ong_nome }}</v-list-item-title>
+            <v-list-item-subtitle class="file-subtitle">{{ ong.ong_razao_social }}</v-list-item-subtitle>
+          </div>
+        </template>
+      </v-list-item>
+    </v-list>
+  </v-card>
+    <div>
+      <apexchart width="500" type="bar" :options="chartOptions" :series="chartData"></apexchart>
+    </div>
 </template>
 
 <style>
-
-body{
-  background-color: #F9F8FE;
-}
-
-.menu {
+.v-list-item__content{
+  gap: 8px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
-  padding: 10px;
-  background: #8A2DD6;
-  box-shadow: 4px 0px 9px 0px rgba(0, 0, 0, 0.25);
-}
-
-.logo img {
-  height: 40px;
-}
-
-.pesquisa_geral {
-  display: flex;
-  flex-direction: column;
   width: 100%;
 }
-
-.pesquisa_esp{
+.card-ong {
   width: 100%;
-  max-width: 450px;
-  margin: auto;
-}
-.user-profile{
-  display: flex;
+  margin-top: 10px;
+  max-width: 1200px;
 }
 
-.user-profile span {
-  color: #fff;
-  font-family: 'Poppins';
-  font-style: normal;
+.texto-lista-itens {
+  box-shadow: 5px 3px 5px 0px rgba(0, 0, 0, 0.10);
+  border-radius: 16px;
+}
+
+.file-title {
+  color: #000 !important;
+  font-size: 15px;
+  font-family: Poppins;
   font-weight: 500;
-  font-size: 16px;
+  text-transform: capitalize;
 }
 
-.v-navigation-drawer{
-  background-color: #8A2DD6;
-  margin-top: 4.4%;
-
-}
-.v-list .v-icon{
-  color: white;
-}
-
-.v-list-item {
-  color: #fff;
-}
-
-.tabela{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1;
-  margin:50px 50px 30px;
-}
-
-.btn-cad-exp{
-  color: #778CA2;
+.file-subtitle {
+  color: #000;
   font-size: 12px;
-  font-family: Rubik;
-  font-weight: 700;
-  line-height: 16px;
+  font-family: Poppins;
+  font-weight: 500;
+  text-transform: capitalize;
 }
-.titulo-tabela{
+
+.page-title {
+  display: flex;
+  width: 100%;
+  align-items: start;
+  margin-top: 50px;
+  margin-left: 155px;
   color: #000;
   font-size: 33.383px;
   font-family: Poppins;
@@ -285,7 +131,37 @@ body{
   text-transform: capitalize;
 }
 
-.v-card{
-  background-color: #F9F8FE;
+.page-subtitle {
+  display: flex;
+  width: 100%;
+  align-items: start;
+  margin-top: 15px;
+  margin-left: 155px;
+  color: #8A2DD6;
+  font-size: 23px;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .card-ong {
+    margin: 10px;
+    max-width: none;
+  }
+
+  .page-title {
+    margin-left: 10px;
+    margin-top: 10px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-title {
+    font-size: 20px;
+  }
 }
 </style>
