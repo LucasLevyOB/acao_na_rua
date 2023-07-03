@@ -50,25 +50,6 @@ export default {
 
 
 <template>
-  <div>  
-    <v-layout>
-      <v-navigation-drawer
-        expand-on-hover
-        rail
-      >
-        <v-list density="compact" nav>
-          <v-list-item prepend-icon="mdi-view-dashboard" title="Dashboard" value="dashboard"></v-list-item>
-          <v-list-item prepend-icon="mdi-charity" title="ONG" value="ong"></v-list-item>
-          <v-list-item prepend-icon="mdi-account-heart"  title="Ajuda Pessoa" value="ajuda pessoa"></v-list-item>
-          <v-list-item prepend-icon="mdi-account-supervisor" title="Voluntário" value="voluntário"></v-list-item>
-          <v-list-item prepend-icon="mdi-archive" title="Item Doação" value="item doação"></v-list-item>
-          <v-list-item prepend-icon="mdi-hand-coin" color="#fff" title="Doação" value="doação"></v-list-item>
-          <v-list-item prepend-icon="mdi-help-circle" color="#fff" title="Sobre" value="sobre"></v-list-item>
-          <v-list-item prepend-icon="mdi-logout" color="#fff" title="Sair" value="sair"></v-list-item>
-        </v-list>
-      </v-navigation-drawer>
-    </v-layout>
-  </div>
   <div class="sobre">
     <h1>Sobre Nós</h1>
     <p>O sistema é voltado para a temática de auxiliar as ONGs no atendimento a pessoas em situação de rua. 
