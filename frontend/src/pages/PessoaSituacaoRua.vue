@@ -4,65 +4,62 @@ import type { Ref } from 'vue';
 import ItensDoadosService from '../services/ItensDoadosService';
 import useToast from '../composables/toast';
 import DataGrid from '../components/DataGrid/DataGrid.vue';
-import ItemDoacao from '../models/ItemDoacao';
-import useDayjs from '../composables/dayjs';
+import PsrService from '../services/PsrService';
 
-type FormData = {
-  id: number;
-  itd_nome: string;
-  itd_quantidade: number;
-  itd_categoria: string;
-  itd_validade: string | null;
+type SexoOptions = {
+  text: string;
+  value: string;
 };
 
-const toast = useToast();
-const dayjs = useDayjs();
+type FormData = {
+  pes_nome: string;
+  pes_data_nasc: Date;
+  pes_sexo: string;
+};
 
-const itensDoadosService = new ItensDoadosService();
+
+const toast = useToast();
+
+const psrService = new PsrService();
 
 const form: Ref<FormData> = ref<FormData>({
-  id: 0,
-  itd_nome: '',
-  itd_quantidade: 0,
-  itd_categoria: '',
-  itd_validade: null,
+  pes_nome: '',
+  pes_data_nasc: new Date(),
+  pes_sexo: '0',
 });
 const dialog = ref(false);
 const dataGridRef = ref();
 const btnEditIsLoading = ref(false);
+const sexoOptions = ref<SexoOptions[]>([
+  { text: 'Masculino', value: '0' },
+  { text: 'Feminino', value: '1' },
+  { text: 'Prefiro não informar', value: '2' },
+]);
 
-const openModalCreate = (item: ItemDoacao) => {
+const openModalCreate = () => {
   dialog.value = true;
-  if (!item.itd_id) return;
-  form.value = {
-    id: item.itd_id,
-    itd_nome: item.itd_nome,
-    itd_quantidade: item.itd_quantidade,
-    itd_categoria: item.itd_categoria,
-    itd_validade: dayjs(item.itd_validade).format('YYYY-MM-DD'),
-  };
 };
 
-const editItemDoacao = async () => {
+const createPSR = async () => {
   btnEditIsLoading.value = true;
-  const { id, itd_categoria, itd_nome, itd_quantidade, itd_validade } = form.value;
+  const { pes_data_nasc, pes_nome, pes_sexo } = form.value;
 
-  if (!id || !itd_categoria || !itd_nome || !itd_quantidade || !itd_validade) {
+  if (!pes_data_nasc || !pes_nome || !pes_sexo) {
     toast.toastError('Preencha todos os campos obrigatórios');
     btnEditIsLoading.value = false;
     return;
   }
 
-  const response = await itensDoadosService.editItemDoacao(id, { itd_categoria, itd_nome, itd_quantidade, itd_validade });
+  const response = await psrService.createPsr({ pes_data_nasc, pes_nome, pes_sexo: parseInt(pes_sexo) });
 
   btnEditIsLoading.value = false;
 
   if (!response.success) {
-    toast.toastError(response.message ? response.message : 'Erro ao editar item para doação');
+    toast.toastError(response.message ? response.message : 'Erro ao criar Pessoa em Situação de Rua');
     return;
   }
 
-  toast.toastSuccess('Item para doação editado com sucesso');
+  toast.toastSuccess('Pesoa em Situação de Rua criada com sucesso');
   dialog.value = false;
   dataGridRef.value?.refresh();
 };
@@ -71,7 +68,7 @@ const editItemDoacao = async () => {
 
 
 <template>
-  <DataGrid ref="dataGridRef" title="Pessaoa em Situação de Rua" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
+  <DataGrid ref="dataGridRef" title="Pessaoa em Situação de Rua" :api="new ItensDoadosService()" :loadHeaders="psrService.getHeaders" :loadItems="psrService.getPsr">
     <template #inBatchActions>
       <v-btn height="48" append-icon="mdi-plus-circle-outline" variant="text" @click="openModalCreate">
           Cadastrar Pessoa em Situação de Rua
@@ -93,7 +90,7 @@ const editItemDoacao = async () => {
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                  v-model="form.itd_nome"
+                  v-model="form.pes_nome"
                   label="Nome da Pessoa em Situação de Rua*"
                   required
                 ></v-text-field>
@@ -103,7 +100,10 @@ const editItemDoacao = async () => {
               sm="6"
               >
               <v-select
-                :items="['Masculino', 'Feminino', 'Prefiro não informar']"
+                v-model="form.pes_sexo"
+                :items="sexoOptions"
+                item-title="text"
+                item-value="value"
                 label="Items"
                 solo color="#000"
               ></v-select>
@@ -112,7 +112,7 @@ const editItemDoacao = async () => {
                 cols="12"
                 sm="6"
               >
-                <v-text-field v-model="form.itd_validade" type="date" />
+                <v-text-field v-model="form.pes_data_nasc" type="date" />
               </v-col>
             </v-row>
           </v-container>
@@ -131,7 +131,7 @@ const editItemDoacao = async () => {
             color="primary"
             variant="flat"
             :loading="btnEditIsLoading"
-            @click="editItemDoacao"
+            @click="createPSR"
           >
             Cadastrar
           </v-btn>

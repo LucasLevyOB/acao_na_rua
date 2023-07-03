@@ -62,7 +62,7 @@ const createVoluntario = async () => {
 };
 
 const loadOngs = async () => {
-  const response = await ongsService.getOngs();
+  const response = await ongsService.getOngsByAdmin();
   if (!response.success || !response.data) {
     toast.toastError(response.message ? response.message : 'Erro ao carregar ONGs');
     return;

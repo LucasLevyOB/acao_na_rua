@@ -43,6 +43,7 @@ const goTo = (route: string) => {
         <v-list density="compact" nav>
             <v-list-item prepend-icon="mdi-view-dashboard" title="Dashboard" value="dashboard" @click="goTo('/')"></v-list-item>
             <v-list-item v-if="authStore.isLogged && authStore.isAdmin" prepend-icon="mdi-charity" title="ONG" value="ong" @click="goTo('/ongs')"></v-list-item>
+            <v-list-item v-if="authStore.isLogged" prepend-icon="mdi-account"  title="Pessoas em Situação de Rua" value="pessoas em situação de rua" @click="goTo('/pessoa-situacao-rua')"></v-list-item>
             <v-list-item v-if="authStore.isLogged" prepend-icon="mdi-account-heart"  title="Ajuda Pessoa" value="ajuda pessoa" @click="goTo('/doacao-psr')"></v-list-item>
             <v-list-item v-if="authStore.isLogged && authStore.isAdmin" prepend-icon="mdi-account-supervisor" title="Voluntário" value="voluntário" @click="goTo('/voluntarios')"></v-list-item>
             <v-list-item v-if="authStore.isLogged" prepend-icon="mdi-archive" title="Item Doação" value="item doação" @click="goTo('/item-doacao')"></v-list-item>

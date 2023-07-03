@@ -6,8 +6,7 @@ import BaseApiResponse from "../../classes/BaseApiResponse";
 const create = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { pes_nome, pes_data_nasc, pes_sexo } = req.body;
-
-        if (!pes_nome || !pes_data_nasc || !pes_sexo || typeof pes_nome !== "string" || typeof pes_data_nasc !== "string" || typeof pes_sexo !== "number") {
+        if (!pes_nome || !pes_data_nasc || pes_sexo === undefined || pes_sexo === null) {
             const response = new BaseApiResponse({ success: false, message: "Dados inválidos" });
             return res.status(400).json(response);
         }

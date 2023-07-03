@@ -40,6 +40,18 @@ export default class OngsService extends BaseAPI {
         }
     }
 
+    public async getOngsByVoluntario(): Promise<BaseAPIResponse<Ong[]>> {
+        try {
+            const response = await this.request.get(`/ongs/by-voluntario/${this.emailCpf}`);
+            return response.data;
+        } catch (error) {
+            return {
+                success: false,
+                message: "Erro ao buscar ONGs",
+            }
+        }
+    }
+
     public async createOng(payload: CreateOngPayload): Promise<BaseAPIResponse<{ ong_id: number }>> {
         try {
             const response = await this.request.post(`/ongs/${this.emailCpf}`, payload);
