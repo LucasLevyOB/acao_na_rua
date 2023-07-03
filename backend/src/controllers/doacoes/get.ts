@@ -5,7 +5,7 @@ import BaseApiResponse from "../../classes/BaseApiResponse";
 import Administrador from "../../models/Adminstrador";
 
 const getAdminByVoluntario = async (volCpf: string): Promise<Administrador> => {
-  const administrador: Administrador = await connection("voluntarios").select("*").where({ vol_cpf: volCpf }).innerJoin("participa", "voluntarios.vol_cpf", "participa.vol_cpf").innerJoin("ongs", "participa.ong_id", "ongs.ong_id").innerJoin("administrador_ong", "ongs.ong_id", "administrador_ong.ong_id").innerJoin("administradores", "administrador_ong.adm_id", "administradores.adm_id").first();
+  const administrador: Administrador = await connection("voluntarios").select("*").where({ "voluntarios.vol_cpf": volCpf }).innerJoin("participa", "voluntarios.vol_cpf", "participa.vol_cpf").innerJoin("ongs", "participa.ong_id", "ongs.ong_id").innerJoin("administrador_ong", "ongs.ong_id", "administrador_ong.ong_id").innerJoin("administradores", "administrador_ong.adm_id", "administradores.adm_id").first();
   return administrador;
 };
 
