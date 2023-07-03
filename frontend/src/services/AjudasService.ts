@@ -1,6 +1,7 @@
 import Doacao from "../models/Doacao";
 import { BaseAPIResponse, TableHeader } from "../types";
 import BaseAPI from "./BaseAPI";
+import Ajuda from '../models/Ajuda';
 
 export interface CreateAjudaPayload {
   ong_id: number,
@@ -23,7 +24,7 @@ export default class AjudasService extends BaseAPI {
         };
     }
 
-    public async getAjudas(): Promise<BaseAPIResponse<Doacao[]>> {
+    public async getAjudas(): Promise<BaseAPIResponse<Ajuda[]>> {
         try {
             const response = await this.request.get(`/ajudas/${this.emailCpf}`);
             return response.data;

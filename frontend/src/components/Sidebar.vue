@@ -50,6 +50,7 @@ const goTo = (route: string) => {
             <v-list-item v-if="authStore.isLogged" prepend-icon="mdi-hand-coin" color="#fff" title="Doação Para ONGs" value="doação" @click="goTo('/doacao-ong')"></v-list-item>
             <v-list-item prepend-icon="mdi-help-circle" color="#fff" title="Sobre" value="sobre" @click="goTo('/sobre')"></v-list-item>
             <v-list-item v-if="authStore.isLogged" prepend-icon="mdi-logout" color="#fff" title="Sair" value="sair" @click="authLogout"></v-list-item>
+            <v-list-item v-else prepend-icon="mdi-login" color="#fff" title="Entrar" value="Entrar" @click="goTo('/login')"></v-list-item>
         </v-list>
         </v-navigation-drawer>
     </v-layout>

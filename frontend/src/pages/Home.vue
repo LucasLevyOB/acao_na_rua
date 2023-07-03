@@ -1,23 +1,29 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import type { Ref } from 'vue';
 import OngsService from '../services/OngsService';
 import type Ong from '../models/Ong';
 import useToast from '../composables/toast';
 import ItensDoadosService from '../services/ItensDoadosService';
 import ItemDoacao from '../models/ItemDoacao';
+import { useAuthStore } from '../modules/auth/stores/authStore';
+import AjudasService from '../services/AjudasService';
+import Ajuda from '../models/Ajuda';
 
 
 const ongsService = new OngsService();
 const itensDoadosService = new ItensDoadosService();
+const ajudasService = new AjudasService();
 const toast = useToast();
+const auth = useAuthStore();
 
 const ongs: Ref<Ong[]> = ref([]);
 const itens: Ref<ItemDoacao[]> = ref([]);
+const ajudas: Ref<Ajuda[]> = ref([])
 const dataLoaded = ref(false);
 
 const loadOngs = async () => {
-  const response = await ongsService.getOngs();
+  const response = auth.isAdmin ? await ongsService.getOngsByAdmin() : await ongsService.getOngsByVoluntario();
 
   if (!response.success || !response.data) {
     toast.toastError('Erro ao carregar ONGs');
@@ -36,29 +42,57 @@ const loadItens = async () => {
   }
 
   itens.value = response.data;
-  dataLoaded.value = true;
+};
+
+const loadAjudas = async () => {
+  const response = await ajudasService.getAjudas();
+
+  if (!response.success || !response.data) {
+    toast.toastError('Erro ao carregar Itens');
+    return;
+  }
+
+  ajudas.value = response.data;
 };
 
 onMounted(async () => {
   await loadOngs();
   await loadItens();
+  await loadAjudas();
+  dataLoaded.value = true;
 });
 
-const chartOptions  = {
-      chart: {
-        id: 'food-chart'
-      },
-      xaxis: {
-        categories: itens.value.map(item => item.itd_nome)
-      }
-    };
+const chartOptions  = computed(() => ({
+  chart: {
+    id: 'itens-chart'
+  },
+  xaxis: {
+    categories: itens.value.map(item => item.itd_nome)
+  }
+}));
 
-    const chartData  = ref([
-      {
-        name: 'Quantidade',
-        data: itens.value.map(item => item.itd_quantidade)
-      }
-    ]);
+const chartOptionsAjudas  = computed(() => ({
+  chart: {
+    id: 'ajudas-chart'
+  },
+  xaxis: {
+    categories: ajudas.value.map(item => item.pes_nome)
+  }
+}));
+
+const chartData  = computed(() => [
+  {
+    name: 'Quantidade',
+    data: itens.value.map(item => item.itd_quantidade)
+  }
+]);
+
+const chartDataAjudas  = computed(() => [
+  {
+    name: 'Quantidade',
+    data: ajudas.value.map(item => item.ajd_qtde_item)
+  }
+]);
 
 </script>
 
@@ -80,9 +114,18 @@ const chartOptions  = {
       </v-list-item>
     </v-list>
   </v-card>
+  <h4 class="page-subtitle mt-8">Itens no Estoque</h4>
+  <v-card class="mt-4">
     <div>
       <apexchart width="500" type="bar" :options="chartOptions" :series="chartData"></apexchart>
     </div>
+  </v-card>
+  <h4 class="page-subtitle mt-8">Quantidade de itens e pessoa ajudada</h4>
+  <v-card class="mt-4">
+    <div>
+      <apexchart width="500" type="bar" :options="chartOptionsAjudas" :series="chartDataAjudas"></apexchart>
+    </div>
+  </v-card>
 </template>
 
 <style>
