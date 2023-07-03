@@ -36,6 +36,7 @@ Matrícula, nome e curso dos participantes.
 #### :lock: Funcionalidades restritas a usuários logados
 - Logout: Os voluntários e administradores poderão fazer logout do sistema.
 - Monitoramento de doações: Administradores poderão monitorar as doações cadastradas no sistema, através de gráficos e etc.
+- Exportar dados: Administradores e voluntários podem exportar dados.
 - Cadastro de ONG: Administradores poderão cadastrar ONGs no sistema.
 - Cadastro de Voluntário: Administradores poderão cadastrar voluntários no sistema.
 - Listagem de Voluntário: Administradores poderão listar seus voluntários cadastrados no sistema.
