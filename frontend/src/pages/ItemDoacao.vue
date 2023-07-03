@@ -67,6 +67,21 @@ const editItemDoacao = async () => {
   dataGridRef.value?.refresh();
 };
 
+const deleteItem = async (item: ItemDoacao) => {
+  if (!item.itd_id) {
+    return;
+  }
+  const response = await itensDoadosService.deleteItemDoacao(item.itd_id);
+
+  if (!response.success) {
+    toast.toastError(response.message ? response.message : 'Erro ao deletar item doação');
+    return;
+  }
+
+  toast.toastSuccess('Item para doação deletado com sucess');
+  dataGridRef.value?.refresh();
+}
+
 </script>
 
 
@@ -74,7 +89,7 @@ const editItemDoacao = async () => {
   <DataGrid ref="dataGridRef" title="Item Doado" :api="new ItensDoadosService()" :loadHeaders="itensDoadosService.getHeaders" :loadItems="itensDoadosService.getItensDoados">
     <template #inlineActions="{item}">
         <v-btn icon="mdi-pencil-outline" color="#98A9BC" variant="text" @click="openModalEdit(item.columns as ItemDoacao)"></v-btn>
-        <v-btn icon="mdi-delete-outline" color="#98A9BC" variant="text" tooltip="Confirmar Deleção"></v-btn>
+        <v-btn icon="mdi-delete-outline" color="#98A9BC" variant="text" @click="deleteItem(item.columns as ItemDoacao)"></v-btn>
     </template>
   </DataGrid>
   <v-row justify="center">

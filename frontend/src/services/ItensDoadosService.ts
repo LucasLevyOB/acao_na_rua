@@ -41,6 +41,18 @@ export default class ItensDoadosService extends BaseAPI {
         }
     }
 
+    public async deleteItemDoacao(itdId: number): Promise<BaseAPIResponse<{}>> {
+        try {
+            const response = await this.request.delete(`/itens_doacoes/${this.emailCpf}/${itdId}`);
+            return response.data;
+        } catch (error) {
+            return {
+                success: false,
+                message: "Erro ao editar item doado",
+            };
+        }
+    }
+
     public getHeaders(): TableHeader[] {
         return [
             {
@@ -70,7 +82,7 @@ export default class ItensDoadosService extends BaseAPI {
             {
                 title: 'Validade',
                 key: 'itd_validade',
-                type: 'datetime',
+                type: 'date',
                 show: true,
             },
             {
