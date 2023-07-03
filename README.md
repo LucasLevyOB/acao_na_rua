@@ -88,9 +88,9 @@ Knex, Expresso, Jsonwebtoken, Cors, Sqlite.
 | ONG | X |  X  |  |  |
 | Administrador | X |    |   |  |
 | Voluntário | X |  X  |  |  |
-| Doação | X |  X  | X | X |
+| Doação | X |  X  |  |  |
 | Pessoa em Situação de Rua | X | X |   |  |
-| Item |  |  X  | X | X |
+| Item | X |  X  | X | X |
 | Ajuda | X |  X  |  X | X |
 
 ## :neckbeard: Rotas da API REST utilizadas
