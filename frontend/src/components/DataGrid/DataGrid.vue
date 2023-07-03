@@ -73,7 +73,6 @@ const downloadCsv = (dataContent: string) => {
 
 const exportData = () => {
   const csvContent = formatCsv();
-  console.log(csvContent)
   downloadCsv(csvContent);
 }
 
