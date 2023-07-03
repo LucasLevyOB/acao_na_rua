@@ -12,6 +12,7 @@ import OngsService from '../services/OngsService';
 import Ong from '../models/Ong';
 import PsrService from '../services/PsrService';
 import PessoaSituacaoRua from '../models/PessoaSituacaoRua';
+import { useAuthStore } from '../modules/auth/stores/authStore';
 
 type FormData = {
   ong_id: string,
@@ -23,6 +24,7 @@ type FormData = {
 
 const toast = useToast();
 const dayjs = useDayjs();
+const auth = useAuthStore();
 
 const ajudasService = new AjudasService();
 const ongsService = new OngsService();
@@ -148,7 +150,7 @@ const deleteAjuda = async (item: Ajuda) => {
 }
 
 const loadOngs = async () => {
-  const response = await ongsService.getOngsByAdmin();
+  const response = auth.isAdmin ? await ongsService.getOngsByAdmin() : await ongsService.getOngsByVoluntario();
   if (!response.success || !response.data) {
     toast.toastError(response.message ? response.message : 'Erro ao carregar ONGs');
     return;
