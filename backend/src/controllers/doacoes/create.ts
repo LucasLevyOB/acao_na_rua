@@ -14,26 +14,18 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
         }
 
         const itemDoacao = item_doacao as ItemDoacao;
+        const quantidade = Number(itemDoacao.itd_quantidade);
 
-        if (!itemDoacao.itd_nome || !itemDoacao.itd_quantidade || !itemDoacao.itd_categoria || !itemDoacao.itd_validade) {
+        if (!itemDoacao.itd_nome || !Number.isInteger(quantidade) || quantidade <= 0 || !itemDoacao.itd_categoria || !itemDoacao.itd_validade) {
             const response = new BaseApiResponse({ success: false, message: "Dados inválidos" });
             return res.status(400).json(response);
         }
 
-        const [id_doacao] = await connection("doacao").insert({ ong_id, doa_cpfcnpj, doa_nome });
-
-        if (!id_doacao) {
-            const response = new BaseApiResponse({ success: false, message: "Erro ao inserir doação" });
-            return res.status(500).json(response);
-        }
-
-        const [itd_id] = await connection("item_doacao").insert({ id_doacao, itd_nome: itemDoacao.itd_nome, itd_quantidade: itemDoacao.itd_quantidade, itd_categoria: itemDoacao.itd_categoria, itd_validade: itemDoacao.itd_validade });
-
-        if (!itd_id) {
-            await connection("doacao").where({ id_doacao }).delete();
-            const response = new BaseApiResponse({ success: false, message: "Erro ao inserir doação" });
-            return res.status(500).json(response);
-        }
+        const id_doacao = await connection.transaction(async (trx) => {
+            const [id_doacao] = await trx("doacao").insert({ ong_id, doa_cpfcnpj, doa_nome });
+            await trx("item_doacao").insert({ id_doacao, itd_nome: itemDoacao.itd_nome, itd_quantidade: quantidade, itd_categoria: itemDoacao.itd_categoria, itd_validade: itemDoacao.itd_validade });
+            return id_doacao;
+        });
 
         const response = new BaseApiResponse<{ id_doacao: number }>({ success: true, data: { id_doacao } });
         return res.json(response);

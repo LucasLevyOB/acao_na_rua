@@ -8,12 +8,15 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
         const { itd_id } = req.params;
         const { itd_nome, itd_quantidade, itd_categoria, itd_validade } = req.body;
 
-        if (!itd_id || !itd_nome || !itd_quantidade || !itd_categoria || !itd_validade) {
+        // Quantidade 0 é válida: o estoque pode ter sido todo distribuído em ajudas.
+        const quantidade = itd_quantidade === null || itd_quantidade === "" ? NaN : Number(itd_quantidade);
+
+        if (!itd_id || !itd_nome || !Number.isInteger(quantidade) || quantidade < 0 || !itd_categoria || !itd_validade) {
             const response = new BaseApiResponse({ success: false, message: "Dados inválidos" });
             return res.status(400).json(response);
         }
 
-        const updated = await connection("item_doacao").where({ itd_id }).update({ itd_nome, itd_quantidade, itd_categoria, itd_validade });
+        const updated = await connection("item_doacao").where({ itd_id }).update({ itd_nome, itd_quantidade: quantidade, itd_categoria, itd_validade });
 
         if (!updated) {
             const response = new BaseApiResponse({ success: false, message: "Erro ao atualizar item de doação" });

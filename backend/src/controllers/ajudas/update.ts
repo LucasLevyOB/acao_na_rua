@@ -1,48 +1,37 @@
-/*
-table ajuda {
-    ajd_id serial
-    ong_id integer [ref: > ong.ong_id]
-    pes_id integer [ref: > pessoa_situacao_rua.pes_id]
-    itd_id integer [ref: > item_doacao.itd_id]
-    ajd_qtde_item integer [note: "less than or equal to item_doacao.itd_quantidade"]
-    ajd_data date
-    indexes {
-        (ajd_id, ong_id, pes_id, itd_id) [pk]
-    }
-}
-*/
-
 import type { NextFunction, Request, Response } from "express";
 import connection from "../../database/connection";
 
 import BaseApiResponse from "../../classes/BaseApiResponse";
+import AppError from "../../classes/Error";
+import { devolverAoEstoque, isQuantidadeValida, retirarDoEstoque } from "./estoque";
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { ajd_id } = req.params;
         const { ong_id, pes_id, itd_id, ajd_qtde_item, ajd_data } = req.body;
 
-        if (!ajd_id || !ong_id || !pes_id || !itd_id || !ajd_qtde_item || !ajd_data) {
-            return res.status(400).json({ success: false, message: "Dados inválidos" });
+        if (!ajd_id || !ong_id || !pes_id || !itd_id || !ajd_data || !isQuantidadeValida(ajd_qtde_item)) {
+            return res.status(400).json(new BaseApiResponse({ success: false, message: "Dados inválidos" }));
         }
 
-        const ajuda = await connection("ajudas").where({ ajd_id }).first();
-        const updated = await connection("ajudas").where({ ajd_id }).update({ ong_id, pes_id, itd_id, ajd_qtde_item, ajd_data });
+        const quantidade = Number(ajd_qtde_item);
 
-        if (!updated) {
-            return res.status(500).json({ success: false, message: "Erro ao atualizar ajuda" });
-        }
+        const updated = await connection.transaction(async (trx) => {
+            const ajuda = await trx("ajudas").where({ ajd_id }).first();
 
-        const itemDoacao = await connection("item_doacao").where({ itd_id }).first();
-        const updatedItemDoacao = await connection("item_doacao").where({ itd_id }).update({ itd_quantidade: itemDoacao.itd_quantidade + ajuda.ajd_qtde_item - ajd_qtde_item });
+            if (!ajuda) {
+                throw new AppError("Ajuda não encontrada", 404);
+            }
 
-        if (!updatedItemDoacao) {
-            const response = new BaseApiResponse({ success: true, message: "Ajuda atualizada com sucesso, porém houve um erro ao atualizar o item do banco, faça isso manuamente." });
-            return res.status(500).json(response);
-        }
+            // Devolve a quantidade ao item original antes de debitar do (possivelmente novo) item,
+            // assim a troca de item na edição não corrompe o estoque de nenhum dos dois.
+            await devolverAoEstoque(trx, ajuda.itd_id, ajuda.ajd_qtde_item);
+            await retirarDoEstoque(trx, itd_id, quantidade);
 
-        return res.json({ success: true, data: { updated } });
+            return trx("ajudas").where({ ajd_id }).update({ ong_id, pes_id, itd_id, ajd_qtde_item: quantidade, ajd_data });
+        });
 
+        return res.json(new BaseApiResponse({ success: true, data: { updated } }));
     } catch (error) {
         next(error);
     }

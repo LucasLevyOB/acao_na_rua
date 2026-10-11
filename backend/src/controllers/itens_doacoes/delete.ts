@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import connection from "../../database/connection";
 
 import BaseApiResponse from "../../classes/BaseApiResponse";
+import AppError from "../../classes/Error";
 
 const deleteItemDoacao = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -12,21 +13,28 @@ const deleteItemDoacao = async (req: Request, res: Response, next: NextFunction)
             return res.status(400).json(response);
         }
 
-        const itemDeletado = await connection("item_doacao").where({ itd_id }).first();
+        await connection.transaction(async (trx) => {
+            const item = await trx("item_doacao").where({ itd_id }).first();
 
-        const itemDoacao = await connection("item_doacao").where({ itd_id }).delete();
+            if (!item) {
+                throw new AppError("Item de doação não encontrado", 404);
+            }
 
-        if (!itemDoacao) {
-            const response = new BaseApiResponse({ success: false, message: "Erro ao deletar item de doação" });
-            return res.status(500).json(response);
-        }
+            // Excluir um item já usado em ajudas deixaria essas ajudas órfãs (somem da listagem).
+            const ajudaVinculada = await trx("ajudas").where({ itd_id }).first();
 
-        const doacao = await connection("doacao").where({ id_doacao: itemDeletado.id_doacao }).delete();
+            if (ajudaVinculada) {
+                throw new AppError("Item de doação possui ajudas vinculadas; exclua as ajudas antes", 409);
+            }
 
-        if (!doacao) {
-            const response = new BaseApiResponse({ success: false, message: "Erro ao deletar doação" });
-            return res.status(500).json(response);
-        }
+            await trx("item_doacao").where({ itd_id }).delete();
+
+            const outroItem = await trx("item_doacao").where({ id_doacao: item.id_doacao }).first();
+
+            if (!outroItem) {
+                await trx("doacao").where({ id_doacao: item.id_doacao }).delete();
+            }
+        });
 
         const response = new BaseApiResponse({ success: true });
         return res.json(response);

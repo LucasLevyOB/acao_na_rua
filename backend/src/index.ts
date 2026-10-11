@@ -30,7 +30,7 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
     // console.log(res);
     // console.log(next);
     res.status(error.status || 500);
-    res.json({ error: error.message });
+    res.json({ success: false, message: error.message, error: error.message });
 });
 
 app.listen(3001);
